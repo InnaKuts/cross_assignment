@@ -84,8 +84,11 @@ type RootNavigatorParamList = StaticParamList<typeof Stack>;
 
 declare global {
   namespace ReactNavigation {
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface RootParamList extends RootNavigatorParamList {}
+    interface RootParamList extends RootNavigatorParamList {
+      Cloth: { clothId: string };
+      Outfit: { outfitId: string };
+      [key: string]: object | undefined;
+    }
   }
 }
 

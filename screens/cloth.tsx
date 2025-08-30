@@ -1,11 +1,17 @@
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
+import { useRoute, RouteProp } from '@react-navigation/native';
 import { ds } from '~/constants';
 
+type ClothRouteProp = RouteProp<ReactNavigation.RootParamList, 'Cloth'>;
+
 export default function Cloth() {
+  const route = useRoute<ClothRouteProp>();
+  const { clothId } = route.params;
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={ds.font.heading.h1}>Cloth</Text>
+        <Text style={ds.font.heading.h1}>Cloth: {clothId}</Text>
       </View>
     </SafeAreaView>
   );
