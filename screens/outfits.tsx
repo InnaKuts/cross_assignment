@@ -12,7 +12,7 @@ export default function Outfits() {
         <Fab
           icon="add"
           onPress={() => {
-            // navigate to outfit screen
+            navigation.navigate('Outfit');
           }}
         />
       </View>

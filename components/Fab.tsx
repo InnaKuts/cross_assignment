@@ -1,10 +1,10 @@
 import { forwardRef } from 'react';
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { ds } from '~/constants';
 
 type FabProps = {
-  icon?: React.ComponentProps<typeof MaterialIcons>['name'];
+  icon?: React.ComponentProps<typeof Ionicons>['name'];
   variant?: 'primary' | 'secondary';
 } & TouchableOpacityProps;
 
@@ -14,7 +14,7 @@ export const Fab = forwardRef<View, FabProps>(
     const iconStyle = [styles[`${variant}Icon`]];
     return (
       <TouchableOpacity ref={ref} {...touchableProps} style={buttonStyle}>
-        <MaterialIcons name={icon} size={ds.size[8]} style={iconStyle} />
+        <Ionicons name={icon} size={ds.size[8]} style={iconStyle} />
       </TouchableOpacity>
     );
   }

@@ -12,7 +12,7 @@ export default function Wardrobe() {
         <Fab
           icon="add"
           onPress={() => {
-            // navigate to cloth screen
+            navigation.navigate('Cloth');
           }}
         />
       </View>

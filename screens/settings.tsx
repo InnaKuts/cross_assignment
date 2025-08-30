@@ -8,11 +8,11 @@ export default function Settings() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={ds.font.heading.h1}>Settings</Text>x{' '}
+        <Text style={ds.font.heading.h1}>Settings</Text>
         <Fab
-          icon="visibility"
+          icon="eye-outline"
           onPress={() => {
-            // navigate to overview screen
+            navigation.navigate('Overview');
           }}
         />
       </View>
