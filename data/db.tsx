@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import uuid from 'react-native-uuid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Raw DB schemas
 export const SlotSchema = z.enum(['head', 'neck', 'torso', 'legs', 'feet']);
@@ -10,7 +12,7 @@ export const ClothDBSchema = z.object({
   id: z.uuid(),
   name: z.string(),
   slot: SlotSchema,
-  photo: z.string(),
+  photo: z.string().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -33,10 +35,16 @@ interface WardrobeDB {
 
 interface WardrobeActions {
   addCloth: (cloth: Omit<ClothDB, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  updateCloth: (id: string, updates: Partial<Omit<ClothDB, 'id' | 'createdAt'>>) => void;
+  updateCloth: (
+    id: string,
+    updates: Partial<Omit<ClothDB, 'id' | 'createdAt' | 'updatedAt'>>
+  ) => void;
   deleteCloth: (id: string) => void;
   addOutfit: (outfit: Omit<OutfitDB, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  updateOutfit: (id: string, updates: Partial<Omit<OutfitDB, 'id' | 'createdAt'>>) => void;
+  updateOutfit: (
+    id: string,
+    updates: Partial<Omit<OutfitDB, 'id' | 'createdAt' | 'updatedAt'>>
+  ) => void;
   deleteOutfit: (id: string) => void;
 }
 
@@ -47,7 +55,7 @@ export const useWardrobeStore = create<WardrobeDB & WardrobeActions>()(
       outfits: {},
 
       addCloth: (clothData) => {
-        const id = crypto.randomUUID();
+        const id = uuid.v4() as string;
         const now = new Date();
         const cloth: ClothDB = {
           ...clothData,
@@ -79,7 +87,7 @@ export const useWardrobeStore = create<WardrobeDB & WardrobeActions>()(
         }),
 
       addOutfit: (outfitData) => {
-        const id = crypto.randomUUID();
+        const id = uuid.v4() as string;
         const now = new Date();
         const outfit: OutfitDB = {
           ...outfitData,
@@ -112,6 +120,18 @@ export const useWardrobeStore = create<WardrobeDB & WardrobeActions>()(
     }),
     {
       name: 'wardrobe-db',
+      storage: {
+        getItem: async (name) => {
+          const value = await AsyncStorage.getItem(name);
+          return value ? JSON.parse(value) : null;
+        },
+        setItem: async (name, value) => {
+          await AsyncStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: async (name) => {
+          await AsyncStorage.removeItem(name);
+        },
+      },
     }
   )
 );

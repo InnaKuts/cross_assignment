@@ -4,12 +4,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
 // Import screens
-import Wardrobe from '../screens/wardrobe';
-import Outfits from '../screens/outfits';
-import Settings from '../screens/settings';
-import Cloth from '../screens/cloth';
-import Outfit from '../screens/outfit';
-import Overview from '../screens/overview';
+import Wardrobe from '../screens/WardrobeScreen';
+import Outfits from '../screens/OutfitsScreen';
+import Settings from '../screens/SettingsScreen';
+import Cloth from '../screens/ClothScreen';
+import Outfit from '../screens/OutfitScreen';
+import Overview from '../screens/OverviewScreen';
 
 // Create tab navigator
 const Tab = createBottomTabNavigator({

@@ -1,16 +1,13 @@
 import { ClothDB, OutfitDB, Slot } from './db';
-import { ClothClient, OutfitClient } from './models';
+import { Cloth, Outfit } from './models';
 
-export const joinClothData = (clothDB: ClothDB): ClothClient => {
+export const joinClothData = (clothDB: ClothDB): Cloth => {
   return {
     ...clothDB,
   };
 };
 
-export const joinOutfitData = (
-  outfitDB: OutfitDB,
-  clothesDB: Record<string, ClothDB>
-): OutfitClient => {
+export const joinOutfitData = (outfitDB: OutfitDB, clothesDB: Record<string, ClothDB>): Outfit => {
   const clothes = outfitDB.clothIds
     .map((id) => clothesDB[id])
     .filter(Boolean)
@@ -24,7 +21,7 @@ export const joinOutfitData = (
       acc[cloth.slot].push(cloth);
       return acc;
     },
-    {} as Record<Slot, ClothClient[]>
+    {} as Record<Slot, Cloth[]>
   );
 
   return {
@@ -48,6 +45,6 @@ export const joinClothesBySlot = (clothesDB: Record<string, ClothDB>) => {
       acc[cloth.slot].push(cloth);
       return acc;
     },
-    {} as Record<Slot, ClothClient[]>
+    {} as Record<Slot, Cloth[]>
   );
 };

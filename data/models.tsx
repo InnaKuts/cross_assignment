@@ -3,23 +3,22 @@ import { SlotSchema } from './db';
 
 export { SlotSchema, Slot } from './db';
 
-// Client schemas (joined, enriched data)
-export const ClothClientSchema = z.object({
+export const ClothSchema = z.object({
   id: z.uuid(),
   name: z.string(),
   slot: SlotSchema,
-  photo: z.string(),
+  photo: z.string().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
-export type ClothClient = z.infer<typeof ClothClientSchema>;
+export type Cloth = z.infer<typeof ClothSchema>;
 
-export const OutfitClientSchema = z.object({
+export const OutfitSchema = z.object({
   id: z.uuid(),
   name: z.string(),
-  clothes: z.array(ClothClientSchema),
-  clothesBySlot: z.record(SlotSchema, z.array(ClothClientSchema)),
+  clothes: z.array(ClothSchema),
+  clothesBySlot: z.record(SlotSchema, z.array(ClothSchema)),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
-export type OutfitClient = z.infer<typeof OutfitClientSchema>;
+export type Outfit = z.infer<typeof OutfitSchema>;
