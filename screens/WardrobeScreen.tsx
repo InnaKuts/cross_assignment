@@ -34,7 +34,7 @@ function WardrobeContent() {
     return (
       data?.map((item) => ({
         id: item.id,
-        imageSource: require('~/assets/images/card-image.jpg'),
+        imageSource: item.photo ? { uri: item.photo } : null,
         title: item.name,
         buttonTitle: 'Edit',
         onButtonPress: () => {

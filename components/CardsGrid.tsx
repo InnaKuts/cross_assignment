@@ -6,7 +6,7 @@ import { useDeviceKind } from './helpers/useDeviceKind';
 
 type CardItem = {
   id: string;
-  imageSource: ImageSourcePropType;
+  imageSource?: ImageSourcePropType | null;
   title: string;
   buttonTitle?: string;
   onButtonPress?: () => void;
