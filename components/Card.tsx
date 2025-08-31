@@ -5,7 +5,7 @@ import { ds } from '~/constants';
 import { Ionicons } from '@expo/vector-icons';
 
 export type ImageItemProps = {
-  source: ImageSourcePropType;
+  uri: string;
   width: number;
   height: number;
 };
@@ -18,16 +18,12 @@ type CardProps = {
 };
 
 export const Card = forwardRef<View, CardProps>(
-  ({ image: imageSource, title, buttonTitle, onButtonPress }, ref) => {
+  ({ image, title, buttonTitle, onButtonPress }, ref) => {
     return (
       <View ref={ref} style={styles.container}>
-        <View
-          style={[
-            styles.imageContainer,
-            imageSource && { aspectRatio: imageSource.width / imageSource.height },
-          ]}>
-          {imageSource ? (
-            <Image source={imageSource.source} style={[styles.image]} />
+        <View style={styles.imageContainer}>
+          {image ? (
+            <Image source={image} style={styles.image} />
           ) : (
             <Ionicons name="image" size={24} color={ds.colors.highlight.darkest} />
           )}

@@ -31,7 +31,7 @@ function WardrobeContent() {
     select: (data) =>
       data.map((item) => ({
         id: item.id,
-        imageSource: item.photo ? { uri: item.photo.url } : null,
+        image: item.photo,
         title: item.name,
         buttonTitle: 'Edit',
         onButtonPress: () => {

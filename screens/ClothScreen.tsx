@@ -1,6 +1,7 @@
 import { useState, useLayoutEffect } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Image, Alert } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, Image, Alert, TouchableOpacity } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 import { ds } from '~/constants';
 import {
   Button,
@@ -77,7 +78,73 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
 
   const [title, setTitle] = useState(cloth?.name || '');
   const [selectedSlot, setSelectedSlot] = useState(cloth?.slot || 'head');
-  const [image] = useState(cloth?.photo);
+  const [image, setImage] = useState(cloth?.photo);
+
+  const pickImage = async () => {
+    Alert.alert('Choose Image Source', 'Select where you want to get the image from', [
+      {
+        text: 'Gallery',
+        onPress: pickFromGallery,
+      },
+      {
+        text: 'Camera',
+        onPress: takePhoto,
+      },
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+    ]);
+  };
+
+  const pickFromGallery = async () => {
+    // Request permissions
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission needed', 'Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
+
+    // Launch image picker
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      const asset = result.assets[0];
+      setImage({
+        uri: asset.uri,
+        width: asset.width,
+        height: asset.height,
+      });
+    }
+  };
+
+  const takePhoto = async () => {
+    // Request permissions
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission needed', 'Sorry, we need camera permissions to make this work!');
+      return;
+    }
+
+    // Launch camera
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      const asset = result.assets[0];
+      setImage({
+        uri: asset.uri,
+        width: asset.width,
+        height: asset.height,
+      });
+    }
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -144,13 +211,15 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
     <View style={styles.container}>
       {/* Image Section */}
       <View style={[styles.imageContainer, image && { aspectRatio: image.width / image.height }]}>
-        {image ? (
-          <Image source={{ uri: image.url }} style={styles.image} />
-        ) : (
-          <View style={styles.imagePlaceholder}>
-            <Ionicons name="camera" size={24} color={ds.colors.highlight.darkest} />
-          </View>
-        )}
+        <TouchableOpacity onPress={pickImage} disabled={isPending} style={styles.imageWrapper}>
+          {image ? (
+            <Image source={image} style={styles.image} />
+          ) : (
+            <View style={styles.imagePlaceholder}>
+              <Ionicons name="camera" size={24} color={ds.colors.highlight.darkest} />
+            </View>
+          )}
+        </TouchableOpacity>
       </View>
 
       {/* Slot Tags */}
@@ -204,10 +273,15 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: ds.spacing.md,
     width: '100%',
+    aspectRatio: 16 / 9,
+  },
+  imageWrapper: {
+    width: '100%',
   },
   image: {
     width: '100%',
     height: '100%',
+    resizeMode: 'contain',
     borderRadius: ds.borderRadius.md,
   },
   imagePlaceholder: {

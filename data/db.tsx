@@ -9,7 +9,7 @@ export const SlotSchema = z.enum(['head', 'neck', 'torso', 'legs', 'feet']);
 export type Slot = z.infer<typeof SlotSchema>;
 
 export const ImageSchema = z.object({
-  url: z.url(),
+  uri: z.url(),
   width: z.number(),
   height: z.number(),
 });
