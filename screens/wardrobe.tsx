@@ -9,6 +9,8 @@ export default function Wardrobe() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={ds.font.heading.h1}>Wardrobe</Text>
+      </View>
+      <View style={styles.fabContainer}>
         <Fab
           icon="add"
           onPress={() => {
@@ -30,5 +32,10 @@ export const styles = StyleSheet.create({
     padding: ds.spacing.md,
     gap: ds.spacing.md,
     alignItems: 'center',
+  },
+  fabContainer: {
+    position: 'absolute',
+    bottom: ds.spacing.lg,
+    right: ds.spacing.lg,
   },
 });
