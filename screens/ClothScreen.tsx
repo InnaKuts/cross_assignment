@@ -1,9 +1,17 @@
-import { useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Image } from 'react-native';
+import { useState, useLayoutEffect } from 'react';
+import { SafeAreaView, View, Text, StyleSheet, Image, Alert } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { ds } from '~/constants';
-import { Button, TextField, Tags, LoadingView, ErrorView, EmptyView } from '~/components';
-import { useCloth, useCreateCloth, useUpdateCloth } from '~/data/api';
+import {
+  Button,
+  TextField,
+  Tags,
+  LoadingView,
+  ErrorView,
+  EmptyView,
+  DeleteButton,
+} from '~/components';
+import { useCloth, useCreateCloth, useUpdateCloth, useDeleteCloth } from '~/data/api';
 import { Slot, Cloth } from '~/data/models';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -61,23 +69,42 @@ function ExistingClothView({ clothId }: { clothId: string }) {
 function ClothView({ cloth }: { cloth: Cloth | null }) {
   const createClothMutation = useCreateCloth();
   const updateClothMutation = useUpdateCloth();
+  const deleteClothMutation = useDeleteCloth();
   const navigation = useNavigation();
 
-  const mutation = cloth ? updateClothMutation : createClothMutation;
+  const isPending =
+    updateClothMutation.isPending || deleteClothMutation.isPending || createClothMutation.isPending;
 
   const [title, setTitle] = useState(cloth?.name || '');
   const [selectedSlot, setSelectedSlot] = useState(cloth?.slot || 'head');
   const [imageUri] = useState(cloth?.photo);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: !cloth
+        ? undefined
+        : () => (
+            <DeleteButton
+              onDelete={() => {
+                deleteClothMutation.mutate(cloth.id, {
+                  onSuccess: () => {
+                    navigation.goBack();
+                  },
+                  onError: (error) => {
+                    Alert.alert('Error', error.message);
+                  },
+                });
+              }}
+              title="Delete Cloth"
+              message={`Are you sure you want to delete "${cloth.name}"?`}
+              style={{ marginRight: ds.spacing.md }}
+            />
+          ),
+    });
+  }, [cloth, navigation, deleteClothMutation]);
+
   const handleSave = () => {
-    console.log('handleSave', cloth);
     if (cloth) {
-      console.log('updateClothMutation', {
-        id: cloth.id,
-        name: title,
-        slot: selectedSlot as Slot,
-        photo: imageUri,
-      });
       updateClothMutation.mutate(
         {
           id: cloth.id,
@@ -89,14 +116,12 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
           onSuccess: () => {
             navigation.goBack();
           },
+          onError: (error) => {
+            Alert.alert('Error', error.message);
+          },
         }
       );
     } else {
-      console.log('createClothMutation', {
-        name: title,
-        slot: selectedSlot as Slot,
-        photo: imageUri,
-      });
       createClothMutation.mutate(
         {
           name: title,
@@ -108,7 +133,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
             navigation.goBack();
           },
           onError: (error) => {
-            console.log('createClothMutation error', error);
+            Alert.alert('Error', error.message);
           },
         }
       );
@@ -132,6 +157,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Slot</Text>
         <Tags
+          disabled={isPending}
           tags={SLOT_OPTIONS}
           selectedTagId={selectedSlot}
           onSelectionChange={(tagId) => {
@@ -142,15 +168,21 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
 
       {/* Title Input */}
       <View style={styles.section}>
-        <TextField label="Title" placeholder="Title" value={title} onChangeText={setTitle} />
+        <TextField
+          label="Title"
+          placeholder="Title"
+          value={title}
+          onChangeText={setTitle}
+          editable={!isPending}
+        />
       </View>
 
       {/* Save Button */}
       <View style={styles.buttonContainer}>
         <Button
-          title={mutation.isPending ? 'Saving...' : 'Save'}
+          title={isPending ? 'Saving...' : 'Save'}
           onPress={handleSave}
-          disabled={mutation.isPending}
+          disabled={isPending}
         />
       </View>
     </View>

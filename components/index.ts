@@ -8,3 +8,4 @@ export * from './CardsGrid';
 export * from './EmptyView';
 export * from './LoadingView';
 export * from './ErrorView';
+export * from './DeleteButton';

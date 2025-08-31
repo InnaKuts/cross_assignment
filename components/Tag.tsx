@@ -8,12 +8,21 @@ type TagProps = {
 } & TouchableOpacityProps;
 
 export const Tag = forwardRef<View, TagProps>(
-  ({ text, selected = false, ...touchableProps }, ref) => {
-    const tagStyle = [styles.tag, selected && styles.selected, touchableProps.style];
-    const tagTextStyle = [styles.tagText, selected && styles.selectedText];
+  ({ text, selected = false, disabled = false, ...touchableProps }, ref) => {
+    const tagStyle = [
+      styles.tag,
+      selected && styles.selected,
+      disabled && styles.disabled,
+      touchableProps.style,
+    ];
+    const tagTextStyle = [
+      styles.tagText,
+      selected && styles.selectedText,
+      disabled && styles.disabledText,
+    ];
 
     return (
-      <TouchableOpacity ref={ref} {...touchableProps} style={tagStyle}>
+      <TouchableOpacity ref={ref} {...touchableProps} style={tagStyle} disabled={disabled}>
         <Text style={tagTextStyle}>{text}</Text>
       </TouchableOpacity>
     );
@@ -43,5 +52,12 @@ const styles = StyleSheet.create({
   },
   selectedText: {
     color: ds.colors.light.lightest,
+  },
+  disabled: {
+    backgroundColor: ds.colors.light.light,
+    opacity: 0.6,
+  },
+  disabledText: {
+    color: ds.colors.dark.light,
   },
 });

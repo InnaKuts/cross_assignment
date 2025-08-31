@@ -116,3 +116,35 @@ export const useCreateOutfit = () => {
     },
   });
 };
+
+export const useDeleteCloth = () => {
+  const queryClient = useQueryClient();
+  const deleteCloth = useWardrobeStore((state) => state.deleteCloth);
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      deleteCloth(id);
+      return id;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clothes'] });
+      queryClient.invalidateQueries({ queryKey: ['clothes', 'bySlot'] });
+      queryClient.invalidateQueries({ queryKey: ['outfits'] });
+    },
+  });
+};
+
+export const useDeleteOutfit = () => {
+  const queryClient = useQueryClient();
+  const deleteOutfit = useWardrobeStore((state) => state.deleteOutfit);
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      deleteOutfit(id);
+      return id;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['outfits'] });
+    },
+  });
+};

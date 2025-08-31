@@ -1,5 +1,5 @@
 import { forwardRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacityProps, View } from 'react-native';
 import { Tag } from './Tag';
 import { ds } from '~/constants';
 
@@ -14,8 +14,8 @@ type TagsProps = {
   onSelectionChange?: (tagId: string) => void;
 };
 
-export const Tags = forwardRef<View, TagsProps>(
-  ({ tags, selectedTagId, onSelectionChange }, ref) => {
+export const Tags = forwardRef<View, TagsProps & TouchableOpacityProps>(
+  ({ tags, selectedTagId, onSelectionChange, ...touchableProps }, ref) => {
     const [internalSelectedId, setInternalSelectedId] = useState<string | undefined>(selectedTagId);
 
     const handleTagPress = (tagId: string) => {
@@ -36,6 +36,7 @@ export const Tags = forwardRef<View, TagsProps>(
               text={tag.text}
               selected={tag.id === (selectedTagId ?? internalSelectedId)}
               onPress={() => handleTagPress(tag.id)}
+              {...touchableProps}
             />
           ))}
         </ScrollView>
