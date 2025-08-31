@@ -22,13 +22,15 @@ export const CardsGrid = forwardRef<FlatList, CardsGridProps>(({ cards, columns 
   const resolvedColumns = columns ?? (isTablet ? 4 : isDesktop ? 6 : 2);
 
   const renderItem = ({ item }: { item: CardItem }) => (
-    <Card
-      key={item.id}
-      imageSource={item.imageSource}
-      title={item.title}
-      buttonTitle={item.buttonTitle}
-      onButtonPress={item.onButtonPress}
-    />
+    <View style={[styles.cardWrapper, { flex: 1 / resolvedColumns }]}>
+      <Card
+        key={item.id}
+        imageSource={item.imageSource}
+        title={item.title}
+        buttonTitle={item.buttonTitle}
+        onButtonPress={item.onButtonPress}
+      />
+    </View>
   );
 
   return (
@@ -43,7 +45,6 @@ export const CardsGrid = forwardRef<FlatList, CardsGridProps>(({ cards, columns 
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.gridContainer}
-        columnWrapperStyle={styles.columnWrapper}
         horizontal={false}
       />
     </View>
@@ -58,10 +59,9 @@ const styles = StyleSheet.create({
   },
   gridContainer: {
     padding: 0,
-    gap: ds.spacing.md,
   },
-  columnWrapper: {
-    justifyContent: 'space-between',
-    gap: ds.spacing.md,
+  cardWrapper: {
+    paddingHorizontal: ds.spacing.xs,
+    paddingVertical: ds.spacing.xs,
   },
 });
