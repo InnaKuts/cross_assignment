@@ -79,7 +79,7 @@ The project includes the following reusable components:
 ## 📁 Project Structure
 
 ```text
-cross_assignment_3/
+cross_assignment/
 ├── components/          # Reusable UI components
 ├── constants/           # Design system (colors, fonts, spacing)
 ├── screens/             # Screen components

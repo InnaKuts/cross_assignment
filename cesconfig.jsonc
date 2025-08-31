@@ -2,7 +2,7 @@
 // It is safe to delete this file as it does not affect the functionality of your application.
 {
   "cesVersion": "2.18.7",
-  "projectName": "cross_assignment_3",
+  "projectName": "cross_assignment",
   "packages": [
     {
       "name": "react-navigation",
