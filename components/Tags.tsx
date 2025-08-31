@@ -11,15 +11,16 @@ type TagItem = {
 type TagsProps = {
   tags: TagItem[];
   selectedTagId?: string;
+  radio?: boolean;
   onSelectionChange?: (tagId: string) => void;
 };
 
 export const Tags = forwardRef<View, TagsProps & TouchableOpacityProps>(
-  ({ tags, selectedTagId, onSelectionChange, ...touchableProps }, ref) => {
+  ({ tags, selectedTagId, radio = false, onSelectionChange, ...touchableProps }, ref) => {
     const [internalSelectedId, setInternalSelectedId] = useState<string | undefined>(selectedTagId);
 
     const handleTagPress = (tagId: string) => {
-      const newSelectedId = internalSelectedId === tagId ? undefined : tagId;
+      const newSelectedId = radio ? tagId : internalSelectedId === tagId ? undefined : tagId;
       setInternalSelectedId(newSelectedId);
       onSelectionChange?.(newSelectedId || '');
     };

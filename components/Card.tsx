@@ -4,20 +4,30 @@ import { Button } from './Button';
 import { ds } from '~/constants';
 import { Ionicons } from '@expo/vector-icons';
 
+export type ImageItemProps = {
+  source: ImageSourcePropType;
+  width: number;
+  height: number;
+};
+
 type CardProps = {
-  imageSource?: ImageSourcePropType | null;
+  image?: ImageItemProps | null;
   title: string;
   buttonTitle?: string;
   onButtonPress?: () => void;
 };
 
 export const Card = forwardRef<View, CardProps>(
-  ({ imageSource, title, buttonTitle, onButtonPress }, ref) => {
+  ({ image: imageSource, title, buttonTitle, onButtonPress }, ref) => {
     return (
       <View ref={ref} style={styles.container}>
-        <View style={styles.imageContainer}>
+        <View
+          style={[
+            styles.imageContainer,
+            imageSource && { aspectRatio: imageSource.width / imageSource.height },
+          ]}>
           {imageSource ? (
-            <Image source={imageSource} style={styles.image} />
+            <Image source={imageSource.source} style={[styles.image]} />
           ) : (
             <Ionicons name="image" size={24} color={ds.colors.highlight.darkest} />
           )}

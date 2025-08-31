@@ -77,7 +77,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
 
   const [title, setTitle] = useState(cloth?.name || '');
   const [selectedSlot, setSelectedSlot] = useState(cloth?.slot || 'head');
-  const [imageUri] = useState(cloth?.photo);
+  const [image] = useState(cloth?.photo);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -110,7 +110,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
           id: cloth.id,
           name: title,
           slot: selectedSlot as Slot,
-          photo: imageUri,
+          photo: image,
         },
         {
           onSuccess: () => {
@@ -126,7 +126,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
         {
           name: title,
           slot: selectedSlot as Slot,
-          photo: imageUri,
+          photo: image,
         },
         {
           onSuccess: () => {
@@ -143,9 +143,9 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
   return (
     <View style={styles.container}>
       {/* Image Section */}
-      <View style={styles.imageContainer}>
-        {imageUri ? (
-          <Image source={{ uri: imageUri }} style={styles.image} />
+      <View style={[styles.imageContainer, image && { aspectRatio: image.width / image.height }]}>
+        {image ? (
+          <Image source={{ uri: image.url }} style={styles.image} />
         ) : (
           <View style={styles.imagePlaceholder}>
             <Ionicons name="camera" size={24} color={ds.colors.highlight.darkest} />
@@ -160,6 +160,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
           disabled={isPending}
           tags={SLOT_OPTIONS}
           selectedTagId={selectedSlot}
+          radio={true}
           onSelectionChange={(tagId) => {
             setSelectedSlot(tagId as Slot);
           }}
@@ -202,10 +203,11 @@ export const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'center',
     marginBottom: ds.spacing.md,
+    width: '100%',
   },
   image: {
     width: '100%',
-    aspectRatio: 16 / 9,
+    height: '100%',
     borderRadius: ds.borderRadius.md,
   },
   imagePlaceholder: {

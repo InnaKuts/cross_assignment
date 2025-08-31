@@ -8,11 +8,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const SlotSchema = z.enum(['head', 'neck', 'torso', 'legs', 'feet']);
 export type Slot = z.infer<typeof SlotSchema>;
 
+export const ImageSchema = z.object({
+  url: z.url(),
+  width: z.number(),
+  height: z.number(),
+});
+export type Image = z.infer<typeof ImageSchema>;
+
 export const ClothDBSchema = z.object({
   id: z.uuid(),
   name: z.string(),
   slot: SlotSchema,
-  photo: z.string().optional(),
+  photo: ImageSchema.optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

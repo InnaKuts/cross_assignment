@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ds } from '~/constants';
 import { Button, CardsGrid, Fab, Tags, TextField } from '~/components';
+import { requireImage } from '~/components/helpers/requireImage';
 
 export default function Overview() {
   return (
@@ -25,17 +26,17 @@ export default function Overview() {
         <TextField label="TextField" placeholder="TextField" onPress={() => {}} />
         <CardsGrid
           cards={[
-            { id: '1', imageSource: require('~/assets/images/card-image.jpg'), title: 'Card 1' },
-            { id: '2', imageSource: require('~/assets/images/card-image.jpg'), title: 'Card 2' },
+            { id: '1', image: requireImage('~/assets/images/card-image.jpg'), title: 'Card 1' },
+            { id: '2', image: requireImage('~/assets/images/card-image.jpg'), title: 'Card 2' },
             {
               id: '3',
-              imageSource: require('~/assets/images/card-image.jpg'),
+              image: requireImage('~/assets/images/card-image.jpg'),
               title: 'Card 3',
               buttonTitle: 'Button',
             },
             {
               id: '4',
-              imageSource: require('~/assets/images/card-image.jpg'),
+              image: requireImage('~/assets/images/card-image.jpg'),
               title: 'Card 4',
               buttonTitle: 'Button',
             },

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SlotSchema } from './db';
+import { ImageSchema, SlotSchema } from './db';
 
 export { SlotSchema, Slot } from './db';
 
@@ -7,7 +7,7 @@ export const ClothSchema = z.object({
   id: z.uuid(),
   name: z.string(),
   slot: SlotSchema,
-  photo: z.string().optional(),
+  photo: ImageSchema.optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

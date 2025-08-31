@@ -1,12 +1,12 @@
 import { forwardRef } from 'react';
-import { FlatList, ImageSourcePropType, StyleSheet, View } from 'react-native';
-import { Card } from './Card';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { Card, ImageItemProps } from './Card';
 import { ds } from '~/constants';
 import { useDeviceKind } from './helpers/useDeviceKind';
 
 type CardItem = {
   id: string;
-  imageSource?: ImageSourcePropType | null;
+  image?: ImageItemProps | null;
   title: string;
   buttonTitle?: string;
   onButtonPress?: () => void;
@@ -25,7 +25,7 @@ export const CardsGrid = forwardRef<FlatList, CardsGridProps>(({ cards, columns 
     <View style={[styles.cardWrapper, { flex: 1 / resolvedColumns }]}>
       <Card
         key={item.id}
-        imageSource={item.imageSource}
+        image={item.image}
         title={item.title}
         buttonTitle={item.buttonTitle}
         onButtonPress={item.onButtonPress}

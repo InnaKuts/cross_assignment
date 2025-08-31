@@ -32,10 +32,11 @@ const fetchClothesBySlot = async (): Promise<Record<Slot, Cloth[]>> => {
 };
 
 // React Query hooks
-export const useClothes = () => {
+export const useClothes = <T = Cloth,>({ select }: { select?: (data: Cloth[]) => T[] } = {}) => {
   return useQuery({
     queryKey: ['clothes'],
     queryFn: fetchClothes,
+    select,
   });
 };
 

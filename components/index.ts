@@ -9,3 +9,4 @@ export * from './EmptyView';
 export * from './LoadingView';
 export * from './ErrorView';
 export * from './DeleteButton';
+export * from './helpers/requireImage';

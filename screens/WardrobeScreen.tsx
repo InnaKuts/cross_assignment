@@ -1,5 +1,4 @@
 import { useNavigation } from '@react-navigation/native';
-import { useMemo } from 'react';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import { CardsGrid, Fab, LoadingView, EmptyView, ErrorView } from '~/components';
 import { ds } from '~/constants';
@@ -28,21 +27,18 @@ export default function Wardrobe() {
 
 function WardrobeContent() {
   const navigation = useNavigation();
-  const { data, isLoading, error, refetch } = useClothes();
-
-  const items = useMemo(() => {
-    return (
-      data?.map((item) => ({
+  const { data, isLoading, error, refetch } = useClothes({
+    select: (data) =>
+      data.map((item) => ({
         id: item.id,
-        imageSource: item.photo ? { uri: item.photo } : null,
+        imageSource: item.photo ? { uri: item.photo.url } : null,
         title: item.name,
         buttonTitle: 'Edit',
         onButtonPress: () => {
           navigation.navigate('Cloth', { clothId: item.id });
         },
-      })) ?? []
-    );
-  }, [data, navigation]);
+      })),
+  });
 
   if (isLoading) {
     return <LoadingView />;
@@ -56,7 +52,7 @@ function WardrobeContent() {
       />
     );
   }
-  if (items.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <EmptyView
         header="Nothing here. For now."
@@ -64,7 +60,7 @@ function WardrobeContent() {
       />
     );
   }
-  return <CardsGrid cards={items} />;
+  return <CardsGrid cards={data} />;
 }
 
 export const styles = StyleSheet.create({
