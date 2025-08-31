@@ -50,9 +50,10 @@ const Tab = createBottomTabNavigator({
 // Create stack navigator
 const Stack = createStackNavigator({
   screens: {
-    Tabs: {
+    Home: {
       screen: Tab,
       options: {
+        title: 'Home',
         headerShown: false,
       },
     },
@@ -85,8 +86,8 @@ type RootNavigatorParamList = StaticParamList<typeof Stack>;
 declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootNavigatorParamList {
-      Cloth: { clothId: string };
-      Outfit: { outfitId: string };
+      Cloth: { clothId: string | null };
+      Outfit: { outfitId: string | null };
       [key: string]: object | undefined;
     }
   }

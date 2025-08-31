@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: ds.spacing.md,
     paddingVertical: ds.spacing.sm,
-    width: '100%',
   },
   primaryButton: {
     backgroundColor: ds.colors.highlight.darkest,
@@ -43,8 +42,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: ds.colors.light.lightest,
-    textAlign: 'center',
     ...ds.font.action.md,
+    textAlign: 'center',
   },
   primaryButtonText: {
     color: ds.colors.light.lightest,
