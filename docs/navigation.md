@@ -6,10 +6,11 @@ This document covers the navigation architecture implemented in the Cross Assign
 
 ### Navigation Demo Videos
 
-| iPhone                                                           | iPad                                                           | Android                                                           |
-| ---------------------------------------------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------- |
-| <video width="300" src="./assets/navigation-iphone.mp4"></video> | <video width="300" src="./assets/navigation-ipad.mp4"></video> | <video width="300" src="./assets/navigation-android.mp4"></video> |
-| ![iPhone](assets/navigation-iphone.mp4)                          | ![iPad](assets/navigation-ipad.mp4)                            | ![Android](assets/navigation-android.mp4)                         |
+> Check videos in `docs/assets`
+
+| iPhone                                  | iPad                                | Android                                   |
+| --------------------------------------- | ----------------------------------- | ----------------------------------------- |
+| ![iPhone](assets/navigation-iphone.mp4) | ![iPad](assets/navigation-ipad.mp4) | ![Android](assets/navigation-android.mp4) |
 
 ## Task 1: Navigation Structure Design
 
