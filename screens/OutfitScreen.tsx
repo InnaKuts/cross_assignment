@@ -2,9 +2,9 @@ import { SafeAreaView, View, StyleSheet, Alert } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { ds } from '~/constants';
 import { useCreateOutfit, useDeleteOutfit, useOutfit, useUpdateOutfit } from '~/data/api';
-import { Button, EmptyView, ErrorView, LoadingView, TextField } from '~/components';
+import { Button, EmptyView, ErrorView, LoadingView, TextField, DeleteButton } from '~/components';
 import { Outfit } from '~/data/models';
-import { useState } from 'react';
+import { useState, useLayoutEffect } from 'react';
 
 type OutfitRouteProp = RouteProp<ReactNavigation.RootParamList, 'Outfit'>;
 
@@ -58,6 +58,30 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
     createOutfitMutation.isPending ||
     updateOutfitMutation.isPending ||
     deleteOutfitMutation.isPending;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: !outfit
+        ? undefined
+        : () => (
+            <DeleteButton
+              onDelete={() => {
+                deleteOutfitMutation.mutate(outfit.id, {
+                  onSuccess: () => {
+                    navigation.goBack();
+                  },
+                  onError: (error) => {
+                    Alert.alert('Error', error.message);
+                  },
+                });
+              }}
+              title="Delete Outfit"
+              message={`Are you sure you want to delete "${outfit.name}"?`}
+              style={{ marginRight: ds.spacing.md }}
+            />
+          ),
+    });
+  }, [outfit, navigation, deleteOutfitMutation]);
 
   return (
     <View style={styles.container}>
