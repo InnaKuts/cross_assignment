@@ -4,7 +4,7 @@ import { Card, ImageItemProps } from './Card';
 import { ds } from '~/constants';
 import { useDeviceKind } from './helpers/useDeviceKind';
 
-type CardItem = {
+export type CardItem = {
   id: string;
   image?: ImageItemProps | null;
   title: string;

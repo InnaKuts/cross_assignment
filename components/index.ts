@@ -10,3 +10,5 @@ export * from './LoadingView';
 export * from './ErrorView';
 export * from './DeleteButton';
 export * from './helpers/requireImage';
+export * from './OutfitCard';
+export * from './OutfitsGrid';

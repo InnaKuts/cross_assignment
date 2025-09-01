@@ -48,10 +48,11 @@ export const useCloth = (id: string) => {
   });
 };
 
-export const useOutfits = () => {
+export const useOutfits = <T = Outfit,>({ select }: { select?: (data: Outfit[]) => T[] } = {}) => {
   return useQuery({
     queryKey: ['outfits'],
     queryFn: fetchOutfits,
+    select,
   });
 };
 
