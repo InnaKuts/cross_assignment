@@ -32,9 +32,7 @@ export default function ClothScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <ClothContent clothId={clothId} />
-      </View>
+      <ClothContent clothId={clothId} />
     </SafeAreaView>
   );
 }

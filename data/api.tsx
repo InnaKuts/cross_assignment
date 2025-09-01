@@ -119,6 +119,21 @@ export const useCreateOutfit = () => {
   });
 };
 
+export const useUpdateOutfit = () => {
+  const queryClient = useQueryClient();
+  const updateOutfit = useWardrobeStore((state) => state.updateOutfit);
+
+  return useMutation({
+    mutationFn: async (outfitData: Omit<OutfitDB, 'createdAt' | 'updatedAt'>) => {
+      updateOutfit(outfitData.id, outfitData);
+      return outfitData;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['outfits'] });
+    },
+  });
+};
+
 export const useDeleteCloth = () => {
   const queryClient = useQueryClient();
   const deleteCloth = useWardrobeStore((state) => state.deleteCloth);

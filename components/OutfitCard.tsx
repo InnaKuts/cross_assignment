@@ -19,7 +19,7 @@ export const OutfitCard = forwardRef<View, OutfitCardProps>(({ title, onEdit, ca
         <Text style={styles.title}>{title}</Text>
         {onEdit && (
           <TouchableOpacity onPress={onEdit} style={styles.editButton}>
-            <Ionicons name="create-outline" size={20} color={ds.colors.highlight.darkest} />
+            <Text style={[ds.font.action.md, { color: ds.colors.highlight.darkest }]}>Edit</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -33,6 +33,9 @@ export const OutfitCard = forwardRef<View, OutfitCardProps>(({ title, onEdit, ca
         {cards.map((card) => (
           <Card key={card.id} {...card} />
         ))}
+        <TouchableOpacity style={styles.addCardButton} onPress={onEdit}>
+          <Ionicons name="add-outline" size={20} color={ds.colors.highlight.darkest} />
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -42,16 +45,13 @@ OutfitCard.displayName = 'OutfitCard';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: ds.colors.highlight.lightest,
-    borderRadius: ds.borderRadius.md,
-    padding: ds.spacing.md,
-    marginVertical: ds.spacing.sm,
+    width: '100%',
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: ds.spacing.md,
+    width: '100%',
   },
   title: {
     ...ds.font.heading.h4,
@@ -62,6 +62,15 @@ const styles = StyleSheet.create({
     padding: ds.spacing.xs,
   },
   scrollContainer: {
-    maxHeight: 300, // Adjust based on your needs
+    height: 100,
+  },
+  addCardButton: {
+    padding: ds.spacing.xs,
+    width: 100,
+    aspectRatio: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: ds.borderRadius.md,
+    backgroundColor: ds.colors.highlight.lightest,
   },
 });

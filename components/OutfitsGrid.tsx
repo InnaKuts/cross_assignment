@@ -39,5 +39,6 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingHorizontal: ds.spacing.md,
     paddingVertical: ds.spacing.sm,
+    gap: ds.spacing.md,
   },
 });
