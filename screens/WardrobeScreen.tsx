@@ -3,6 +3,7 @@ import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import { CardsGrid, Fab, LoadingView, EmptyView, ErrorView } from '~/components';
 import { ds } from '~/constants';
 import { useClothes } from '~/data/api';
+import { SCREENS } from '~/navigation/screens';
 
 export default function Wardrobe() {
   const navigation = useNavigation();
@@ -17,7 +18,7 @@ export default function Wardrobe() {
         <Fab
           icon="add"
           onPress={() => {
-            navigation.navigate('Cloth', { clothId: null });
+            navigation.navigate(SCREENS.CLOTH, { clothId: null });
           }}
         />
       </View>
@@ -35,7 +36,7 @@ function WardrobeContent() {
         title: item.name,
         buttonTitle: 'Edit',
         onButtonPress: () => {
-          navigation.navigate('Cloth', { clothId: item.id });
+          navigation.navigate(SCREENS.CLOTH, { clothId: item.id });
         },
       })),
   });

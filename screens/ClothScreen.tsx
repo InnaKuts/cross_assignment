@@ -15,8 +15,9 @@ import {
 import { useCloth, useCreateCloth, useUpdateCloth, useDeleteCloth } from '~/data/api';
 import { Slot, Cloth } from '~/data/models';
 import { Ionicons } from '@expo/vector-icons';
+import { SCREENS } from '~/navigation/screens';
 
-type ClothRouteProp = RouteProp<ReactNavigation.RootParamList, 'Cloth'>;
+type ClothRouteProp = RouteProp<ReactNavigation.RootParamList, typeof SCREENS.CLOTH>;
 
 const SLOT_OPTIONS = [
   { id: 'head', text: 'Head' },

@@ -5,8 +5,9 @@ import { useCreateOutfit, useDeleteOutfit, useOutfit, useUpdateOutfit } from '~/
 import { Button, EmptyView, ErrorView, LoadingView, TextField, DeleteButton } from '~/components';
 import { Outfit } from '~/data/models';
 import { useState, useLayoutEffect } from 'react';
+import { SCREENS } from '~/navigation/screens';
 
-type OutfitRouteProp = RouteProp<ReactNavigation.RootParamList, 'Outfit'>;
+type OutfitRouteProp = RouteProp<ReactNavigation.RootParamList, typeof SCREENS.OUTFIT>;
 
 export default function OutfitScreen() {
   const route = useRoute<OutfitRouteProp>();

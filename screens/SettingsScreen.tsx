@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
-import { Fab } from '~/components';
+import { Button } from '~/components';
 import { ds } from '~/constants';
+import { SCREENS } from '~/navigation/screens';
 
 export default function Settings() {
   const navigation = useNavigation();
@@ -9,10 +10,10 @@ export default function Settings() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={ds.font.heading.h1}>Settings</Text>
-        <Fab
-          icon="eye-outline"
+        <Button
+          title="Overview"
           onPress={() => {
-            navigation.navigate('Overview');
+            navigation.navigate(SCREENS.OVERVIEW);
           }}
         />
       </View>

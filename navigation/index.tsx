@@ -1,97 +1,33 @@
 import { createStaticNavigation, StaticParamList } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
 
-// Import screens
-import Wardrobe from '../screens/WardrobeScreen';
-import Outfits from '../screens/OutfitsScreen';
-import Settings from '../screens/SettingsScreen';
-import Cloth from '../screens/ClothScreen';
-import Outfit from '../screens/OutfitScreen';
-import Overview from '../screens/OverviewScreen';
+// Import navigators
+import Stack from './StackNavigator';
+import { SCREENS } from './screens';
 
-// Create tab navigator
-const Tab = createBottomTabNavigator({
-  screens: {
-    Wardrobe: {
-      screen: Wardrobe,
-      options: {
-        title: 'Wardrobe',
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="shirt-outline" size={size} color={color} />
-        ),
-      },
-    },
-    Outfits: {
-      screen: Outfits,
-      options: {
-        title: 'Outfits',
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="people-outline" size={size} color={color} />
-        ),
-      },
-    },
-    Settings: {
-      screen: Settings,
-      options: {
-        title: 'Settings',
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="settings-outline" size={size} color={color} />
-        ),
-      },
-    },
-  },
-});
+/**
+ * Root Navigation Configuration
+ *
+ * This is the main navigation entry point that:
+ * 1. Creates the static navigation instance from the stack navigator
+ * 2. Defines the root parameter list with the screens
+ * 3. Exports the configured navigation component
+ *
+ * The static navigation approach provides better performance
+ * and type safety compared to dynamic navigation.
+ */
 
-// Create stack navigator
-const Stack = createStackNavigator({
-  screens: {
-    Home: {
-      screen: Tab,
-      options: {
-        title: 'Home',
-        headerShown: false,
-      },
-    },
-    Cloth: {
-      screen: Cloth,
-      options: {
-        title: 'Cloth',
-        headerShown: true,
-      },
-    },
-    Outfit: {
-      screen: Outfit,
-      options: {
-        title: 'Outfit',
-        headerShown: true,
-      },
-    },
-    Overview: {
-      screen: Overview,
-      options: {
-        title: 'Overview',
-        headerShown: true,
-      },
-    },
-  },
-});
+// Create the static navigation instance
+const Navigation = createStaticNavigation(Stack);
 
-type RootNavigatorParamList = StaticParamList<typeof Stack>;
+// Export the main navigation component
+export default Navigation;
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootNavigatorParamList {
-      Cloth: { clothId: string | null };
-      Outfit: { outfitId: string | null };
+    interface RootParamList extends StaticParamList<typeof Stack> {
+      [SCREENS.CLOTH]: { clothId: string | null };
+      [SCREENS.OUTFIT]: { outfitId: string | null };
       [key: string]: object | undefined;
     }
   }
 }
-
-const Navigation = createStaticNavigation(Stack);
-export default Navigation;
