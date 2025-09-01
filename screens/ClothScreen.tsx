@@ -1,5 +1,14 @@
 import { useState, useLayoutEffect } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Image, Alert, TouchableOpacity } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Alert,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { ds } from '~/constants';
@@ -207,7 +216,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       {/* Image Section */}
       <View style={[styles.imageContainer, image && { aspectRatio: image.width / image.height }]}>
         <TouchableOpacity onPress={pickImage} disabled={isPending} style={styles.imageWrapper}>
@@ -254,7 +263,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
           disabled={isPending}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -265,6 +274,8 @@ export const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  contentContainer: {
     padding: ds.spacing.md,
     gap: ds.spacing.lg,
   },
@@ -306,7 +317,7 @@ export const styles = StyleSheet.create({
     color: ds.colors.dark.dark,
   },
   buttonContainer: {
-    marginTop: 'auto',
     paddingTop: ds.spacing.lg,
+    paddingBottom: ds.spacing.lg,
   },
 });
