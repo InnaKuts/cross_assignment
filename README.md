@@ -46,27 +46,9 @@ A React Native project showcasing various UI components built with Expo and Type
   pnpm web
   ```
 
-## 🧩 Components
+## 📚 Documentation
 
-The project includes the following reusable components:
-
-### Core Components
-
-- **Button** - Primary and secondary button variants
-- **Card** - Image card with optional button
-- **CardsGrid** - n-column grid layout for cards
-- **Fab** - Floating Action Button with icon support
-- **Tag** - Individual tag component
-- **Tags** - Horizontal tag list with selection
-- **TextField** - Input field with label
-
-### Component Screenshots
-
-**Phone View:**
-![Components Overview - Phone](docs/assets/components_phone.png)
-
-**Tablet View:**
-![Components Overview - Tablet](docs/assets/components_tablet.png)
+- **[Components Documentation](docs/components.md)** - Cross Assignment 3
 
 ## 🛠️ Tech Stack
 
