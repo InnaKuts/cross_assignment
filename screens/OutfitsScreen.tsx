@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import { EmptyView, ErrorView, Fab, LoadingView, OutfitsGrid } from '~/components';
 import { ds } from '~/constants';
-import { useOutfits } from '~/data/api';
+import { useOutfits } from '~/data/queries';
 import { SCREENS } from '~/navigation/screens';
 
 export default function Outfits() {

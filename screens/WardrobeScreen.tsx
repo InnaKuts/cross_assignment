@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import { CardsGrid, Fab, LoadingView, EmptyView, ErrorView } from '~/components';
 import { ds } from '~/constants';
-import { useClothes } from '~/data/api';
+import { useClothes } from '~/data/queries';
 import { SCREENS } from '~/navigation/screens';
 
 export default function Wardrobe() {

@@ -1,7 +1,7 @@
 import { SafeAreaView, View, StyleSheet, Alert } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { ds } from '~/constants';
-import { useCreateOutfit, useDeleteOutfit, useOutfit, useUpdateOutfit } from '~/data/api';
+import { useCreateOutfit, useDeleteOutfit, useOutfit, useUpdateOutfit } from '~/data/queries';
 import { Button, EmptyView, ErrorView, LoadingView, TextField, DeleteButton } from '~/components';
 import { Outfit } from '~/data/models';
 import { useState, useLayoutEffect } from 'react';

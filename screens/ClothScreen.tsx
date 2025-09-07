@@ -21,7 +21,7 @@ import {
   EmptyView,
   DeleteButton,
 } from '~/components';
-import { useCloth, useCreateCloth, useUpdateCloth, useDeleteCloth } from '~/data/api';
+import { useCloth, useCreateCloth, useUpdateCloth, useDeleteCloth } from '~/data/queries';
 import { Slot, Cloth } from '~/data/models';
 import { Ionicons } from '@expo/vector-icons';
 import { SCREENS } from '~/navigation/screens';
