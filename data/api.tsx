@@ -72,7 +72,6 @@ export const useCreateCloth = () => {
       });
       if (!response.ok) throw new Error('Failed to create cloth');
       const data = await response.json();
-      console.log('data', data);
       return ClothSchema.parse(data);
     },
     onSuccess: (result) => {

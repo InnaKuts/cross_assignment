@@ -25,7 +25,6 @@ import { useCloth, useCreateCloth, useUpdateCloth, useDeleteCloth } from '~/data
 import { Slot, Cloth } from '~/data/models';
 import { Ionicons } from '@expo/vector-icons';
 import { SCREENS } from '~/navigation/screens';
-import { resolvePhoto } from '~/components/helpers/resolvePhoto';
 
 type ClothRouteProp = RouteProp<ReactNavigation.RootParamList, typeof SCREENS.CLOTH>;
 
@@ -87,7 +86,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
 
   const [title, setTitle] = useState(cloth?.name || '');
   const [selectedSlot, setSelectedSlot] = useState(cloth?.slot || 'head');
-  const [image, setImage] = useState(resolvePhoto(cloth?.photo));
+  const [image, setImage] = useState(cloth?.photo.source);
 
   const pickImage = async () => {
     Alert.alert('Choose Image Source', 'Select where you want to get the image from', [
@@ -186,7 +185,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
           id: cloth.id,
           name: title,
           slot: selectedSlot as Slot,
-          photo: image,
+          photo: { source: image ?? null },
         },
         {
           onSuccess: () => {
@@ -202,7 +201,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
         {
           name: title,
           slot: selectedSlot as Slot,
-          photo: image,
+          photo: { source: image ?? null },
         },
         {
           onSuccess: () => {

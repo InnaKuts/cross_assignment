@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import { CardsGrid, Fab, LoadingView, EmptyView, ErrorView } from '~/components';
-import { resolvePhoto } from '~/components/helpers/resolvePhoto';
 import { ds } from '~/constants';
 import { useClothes } from '~/data/api';
 import { SCREENS } from '~/navigation/screens';
@@ -33,7 +32,7 @@ function WardrobeContent() {
     select: (data) =>
       data.map((item) => ({
         id: item.id,
-        image: resolvePhoto(item.photo),
+        image: item.photo.source,
         title: item.name,
         buttonTitle: 'Edit',
         onButtonPress: () => {

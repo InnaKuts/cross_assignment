@@ -15,7 +15,9 @@ export const ClothSchema = z.object({
   userId: z.string(),
   name: z.string(),
   slot: SlotSchema,
-  photo: ImageSchema.or(z.object({})).nullable(),
+  photo: z.object({
+    source: ImageSchema.nullable(),
+  }),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
 });
