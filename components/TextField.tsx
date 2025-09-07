@@ -15,7 +15,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
         <TextInput
           ref={ref}
           placeholder={placeholder}
-          placeholderTextColor={ds.colors.dark.lightest}
+          placeholderTextColor={ds.colors.secondary.lightest}
           style={[styles.textInput, style]}
           {...textInputProps}
         />
@@ -32,17 +32,17 @@ const styles = StyleSheet.create({
   },
   label: {
     ...ds.font.heading.h5,
-    color: ds.colors.dark.dark,
+    color: ds.colors.secondary.dark,
     marginBottom: ds.spacing.xs,
   },
   textInput: {
     ...ds.font.body.md,
     borderWidth: ds.borderWidth.xs,
-    borderColor: ds.colors.light.darkest,
+    borderColor: ds.colors.primary.darkest,
     borderRadius: ds.borderRadius.md,
     paddingHorizontal: ds.spacing.md,
     paddingVertical: ds.spacing.md,
-    color: ds.colors.dark.darkest,
-    backgroundColor: ds.colors.light.lightest,
+    color: ds.colors.secondary.darkest,
+    backgroundColor: ds.colors.primary.lightest,
   },
 });

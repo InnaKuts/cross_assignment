@@ -37,11 +37,11 @@ const styles = StyleSheet.create({
     ...ds.font.heading.h2,
     textAlign: 'center',
     marginBottom: ds.spacing.sm,
-    color: ds.colors.dark.darkest,
+    color: ds.colors.secondary.darkest,
   },
   details: {
     ...ds.font.body.md,
     textAlign: 'center',
-    color: ds.colors.dark.light,
+    color: ds.colors.secondary.light,
   },
 });

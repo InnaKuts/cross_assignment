@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...ds.font.heading.h4,
-    color: ds.colors.dark.darkest,
+    color: ds.colors.secondary.darkest,
     marginBottom: ds.spacing.sm,
   },
 });

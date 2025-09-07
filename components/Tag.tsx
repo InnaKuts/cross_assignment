@@ -51,13 +51,13 @@ const styles = StyleSheet.create({
     backgroundColor: ds.colors.highlight.darkest,
   },
   selectedText: {
-    color: ds.colors.light.lightest,
+    color: ds.colors.primary.lightest,
   },
   disabled: {
-    backgroundColor: ds.colors.light.light,
+    backgroundColor: ds.colors.primary.light,
     opacity: 0.6,
   },
   disabledText: {
-    color: ds.colors.dark.light,
+    color: ds.colors.secondary.light,
   },
 });

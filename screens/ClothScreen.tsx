@@ -270,7 +270,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: ds.colors.light.lightest,
+    backgroundColor: ds.colors.primary.lightest,
   },
   container: {
     flex: 1,
@@ -307,14 +307,14 @@ export const styles = StyleSheet.create({
   },
   imagePlaceholderText: {
     ...ds.font.body.md,
-    color: ds.colors.dark.lightest,
+    color: ds.colors.secondary.lightest,
   },
   section: {
     gap: ds.spacing.sm,
   },
   sectionTitle: {
     ...ds.font.heading.h5,
-    color: ds.colors.dark.dark,
+    color: ds.colors.secondary.dark,
   },
   buttonContainer: {
     paddingTop: ds.spacing.lg,

@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
     paddingVertical: ds.spacing.sm - ds.borderWidth.sm,
   },
   buttonText: {
-    color: ds.colors.light.lightest,
+    color: ds.colors.primary.lightest,
     ...ds.font.action.md,
     textAlign: 'center',
   },
   primaryButtonText: {
-    color: ds.colors.light.lightest,
+    color: ds.colors.primary.lightest,
   },
   secondaryButtonText: {
     color: ds.colors.highlight.darkest,

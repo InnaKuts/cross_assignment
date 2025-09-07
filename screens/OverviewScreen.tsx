@@ -50,7 +50,7 @@ export default function Overview() {
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: ds.colors.light.lightest,
+    backgroundColor: ds.colors.primary.lightest,
   },
   container: {
     flex: 1,

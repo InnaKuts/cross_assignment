@@ -35,14 +35,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 6,
     elevation: 4,
-    shadowColor: ds.colors.dark.darkest,
+    shadowColor: ds.colors.secondary.darkest,
     shadowOffset: { width: 0, height: 2 },
   },
   secondaryButton: {
     backgroundColor: ds.colors.highlight.lightest,
   },
   primaryIcon: {
-    color: ds.colors.light.lightest,
+    color: ds.colors.primary.lightest,
   },
   secondaryIcon: {
     color: ds.colors.highlight.darkest,

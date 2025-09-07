@@ -3,7 +3,7 @@ import { size } from './size';
 import { semanticFonts } from './fonts';
 
 export const ds = {
-  colors,
+  colors: colors.light,
   size,
 
   breakpoints: {
