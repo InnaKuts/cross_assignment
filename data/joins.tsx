@@ -1,4 +1,4 @@
-import { ClothDB, OutfitDB, Slot } from './db';
+import { ClothDB, OutfitDB, Slot } from './schema';
 import { Cloth, Outfit } from './models';
 
 export const joinClothData = (clothDB: ClothDB): Cloth => {

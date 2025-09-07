@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { ImageSchema, SlotSchema } from './db';
+import { ImageSchema, SlotSchema } from './schema';
 
-export { SlotSchema, Slot } from './db';
+export { SlotSchema, Slot } from './schema';
 
 export const ClothSchema = z.object({
   id: z.uuid(),

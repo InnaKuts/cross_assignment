@@ -1,24 +1,37 @@
-import { Cloth, Outfit, ClothSchema, OutfitSchema } from './models';
+import { z } from 'zod';
+import { ClothDB, OutfitDB, ClothDBSchema, OutfitDBSchema } from './schema';
 
 const API_BASE_URL = 'https://683ab5db43bb370a86737e12.mockapi.io/api/v1';
 
+const tryParse = <T, S extends z.ZodType<T>>(data: unknown, schema: S): T | null => {
+  try {
+    return schema.parse(data);
+  } catch {
+    return null;
+  }
+};
+
+const tryParseArray = <T, S extends z.ZodType<T>>(data: unknown, schema: S): T[] => {
+  if (!Array.isArray(data)) throw new Error('Expected data to be an array');
+  return data.map((item) => tryParse<T, S>(item, schema)).filter((item) => item !== null);
+};
+
 export const clothesApi = {
-  get: (userId: string) => ({
+  get: (userId: Pick<ClothDB, 'userId'>) => ({
     queryKey: ['clothes', 'user', userId] as const,
-    queryFn: async (): Promise<Cloth[]> => {
+    queryFn: async (): Promise<Record<string, ClothDB>> => {
       const response = await fetch(`${API_BASE_URL}/clothes?userId=${userId}`);
       if (!response.ok) throw new Error('Failed to fetch clothes');
       const data = await response.json();
-      return data.map((item: unknown) => ClothSchema.parse(item));
+      const list = tryParseArray<ClothDB, typeof ClothDBSchema>(data, ClothDBSchema);
+      return Object.fromEntries(list.map((cloth) => [cloth.id, cloth]));
     },
     enabled: !!userId,
   }),
 
   // Mutations
   create: () => ({
-    mutationFn: async (
-      clothData: Omit<Cloth, 'id' | 'createdAt' | 'updatedAt'>
-    ): Promise<Cloth> => {
+    mutationFn: async (clothData: ClothDB): Promise<ClothDB> => {
       const response = await fetch(`${API_BASE_URL}/clothes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -26,7 +39,7 @@ export const clothesApi = {
       });
       if (!response.ok) throw new Error('Failed to create cloth');
       const data = await response.json();
-      return ClothSchema.parse(data);
+      return ClothDBSchema.parse(data);
     },
   }),
 
@@ -34,7 +47,7 @@ export const clothesApi = {
     mutationFn: async ({
       id,
       ...clothData
-    }: Omit<Cloth, 'createdAt' | 'updatedAt'>): Promise<Cloth> => {
+    }: Pick<ClothDB, 'id'> & Partial<Omit<ClothDB, 'id'>>): Promise<ClothDB> => {
       const response = await fetch(`${API_BASE_URL}/clothes/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -42,12 +55,12 @@ export const clothesApi = {
       });
       if (!response.ok) throw new Error('Failed to update cloth');
       const data = await response.json();
-      return ClothSchema.parse(data);
+      return ClothDBSchema.parse(data);
     },
   }),
 
   delete: () => ({
-    mutationFn: async (id: string): Promise<void> => {
+    mutationFn: async (id: Pick<ClothDB, 'id'>): Promise<void> => {
       const response = await fetch(`${API_BASE_URL}/clothes/${id}`, {
         method: 'DELETE',
       });
@@ -57,21 +70,20 @@ export const clothesApi = {
 };
 
 export const outfitsApi = {
-  get: (userId: string) => ({
+  get: (userId: Pick<OutfitDB, 'userId'>) => ({
     queryKey: ['outfits', 'user', userId] as const,
-    queryFn: async (): Promise<Outfit[]> => {
+    queryFn: async (): Promise<Record<string, OutfitDB>> => {
       const response = await fetch(`${API_BASE_URL}/outfits?userId=${userId}`);
       if (!response.ok) throw new Error('Failed to fetch outfits');
       const data = await response.json();
-      return data.map((item: unknown) => OutfitSchema.parse(item));
+      const list = tryParseArray<OutfitDB, typeof OutfitDBSchema>(data, OutfitDBSchema);
+      return Object.fromEntries(list.map((outfit) => [outfit.id, outfit]));
     },
     enabled: !!userId,
   }),
 
   create: () => ({
-    mutationFn: async (
-      outfitData: Omit<Outfit, 'id' | 'createdAt' | 'updatedAt'>
-    ): Promise<Outfit> => {
+    mutationFn: async (outfitData: OutfitDB): Promise<OutfitDB> => {
       const response = await fetch(`${API_BASE_URL}/outfits`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -79,7 +91,7 @@ export const outfitsApi = {
       });
       if (!response.ok) throw new Error('Failed to create outfit');
       const data = await response.json();
-      return OutfitSchema.parse(data);
+      return OutfitDBSchema.parse(data);
     },
   }),
 
@@ -87,7 +99,7 @@ export const outfitsApi = {
     mutationFn: async ({
       id,
       ...outfitData
-    }: Omit<Outfit, 'createdAt' | 'updatedAt'>): Promise<Outfit> => {
+    }: Pick<OutfitDB, 'id'> & Partial<Omit<OutfitDB, 'id'>>): Promise<OutfitDB> => {
       const response = await fetch(`${API_BASE_URL}/outfits/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -95,12 +107,12 @@ export const outfitsApi = {
       });
       if (!response.ok) throw new Error('Failed to update outfit');
       const data = await response.json();
-      return OutfitSchema.parse(data);
+      return OutfitDBSchema.parse(data);
     },
   }),
 
   delete: () => ({
-    mutationFn: async (id: string): Promise<void> => {
+    mutationFn: async (id: Pick<OutfitDB, 'id'>): Promise<void> => {
       const response = await fetch(`${API_BASE_URL}/outfits/${id}`, {
         method: 'DELETE',
       });

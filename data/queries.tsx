@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { OutfitDB, useWardrobeStore } from './db';
+import { OutfitDB, useWardrobeStore } from './schema';
 import { Cloth, Outfit, Slot } from './models';
 import { joinClothData, joinOutfitData, joinClothesBySlot } from './joins';
 import { authQueryOptions } from './auth';
