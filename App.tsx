@@ -1,5 +1,4 @@
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { useColorScheme } from 'react-native';
 import { useEffect, useMemo } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import {

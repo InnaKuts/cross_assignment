@@ -1,5 +1,6 @@
 import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native';
 import { ds } from '~/constants';
+import { useThemeColors } from '~/contexts/ThemeContext';
 
 type EmptyViewProps = {
   header: string;
@@ -8,6 +9,7 @@ type EmptyViewProps = {
 };
 
 export function EmptyView({ header, details, imageSource }: EmptyViewProps) {
+  const colors = useThemeColors();
   return (
     <View style={styles.container}>
       <Image
@@ -15,8 +17,8 @@ export function EmptyView({ header, details, imageSource }: EmptyViewProps) {
         style={styles.image}
         resizeMode="contain"
       />
-      <Text style={styles.header}>{header}</Text>
-      <Text style={styles.details}>{details}</Text>
+      <Text style={[styles.header, { color: colors.secondary.darkest }]}>{header}</Text>
+      <Text style={[styles.details, { color: colors.secondary.light }]}>{details}</Text>
     </View>
   );
 }
@@ -37,11 +39,9 @@ const styles = StyleSheet.create({
     ...ds.font.heading.h2,
     textAlign: 'center',
     marginBottom: ds.spacing.sm,
-    color: ds.colors.secondary.darkest,
   },
   details: {
     ...ds.font.body.md,
     textAlign: 'center',
-    color: ds.colors.secondary.light,
   },
 });

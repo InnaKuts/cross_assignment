@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { Button } from './Button';
 import { ds } from '~/constants';
 import { Ionicons } from '@expo/vector-icons';
+import { useThemeColors } from '~/contexts/ThemeContext';
 
 export type ImageItemProps = {
   uri: string;
@@ -19,17 +20,18 @@ type CardProps = {
 
 export const Card = forwardRef<View, CardProps>(
   ({ image, title, buttonTitle, onButtonPress }, ref) => {
+    const colors = useThemeColors();
     return (
-      <View ref={ref} style={styles.container}>
-        <View style={styles.imageContainer}>
+      <View ref={ref} style={[styles.container, { backgroundColor: colors.highlight.lightest }]}>
+        <View style={[styles.imageContainer, { backgroundColor: colors.highlight.light }]}>
           {image ? (
             <Image source={image} style={styles.image} />
           ) : (
-            <Ionicons name="image" size={24} color={ds.colors.highlight.darkest} />
+            <Ionicons name="image" size={24} color={colors.highlight.darkest} />
           )}
         </View>
         <View style={styles.content}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={[styles.title, { color: colors.secondary.darkest }]}>{title}</Text>
           {buttonTitle && (
             <Button title={buttonTitle} variant="secondary" onPress={onButtonPress} />
           )}
@@ -46,12 +48,10 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: ds.borderRadius.md,
     overflow: 'hidden',
-    backgroundColor: ds.colors.highlight.lightest,
   },
   imageContainer: {
     width: '100%',
     aspectRatio: 16 / 9,
-    backgroundColor: ds.colors.highlight.light,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...ds.font.heading.h4,
-    color: ds.colors.secondary.darkest,
     marginBottom: ds.spacing.sm,
   },
 });

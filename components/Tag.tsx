@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { ds } from '~/constants';
+import { useThemeColors } from '~/contexts/ThemeContext';
 
 type TagProps = {
   text: string;
@@ -9,16 +10,19 @@ type TagProps = {
 
 export const Tag = forwardRef<View, TagProps>(
   ({ text, selected = false, disabled = false, ...touchableProps }, ref) => {
+    const colors = useThemeColors();
     const tagStyle = [
       styles.tag,
-      selected && styles.selected,
-      disabled && styles.disabled,
+      { backgroundColor: colors.highlight.lightest },
+      selected && { backgroundColor: colors.highlight.darkest },
+      disabled && { backgroundColor: colors.primary.light, opacity: 0.6 },
       touchableProps.style,
     ];
     const tagTextStyle = [
       styles.tagText,
-      selected && styles.selectedText,
-      disabled && styles.disabledText,
+      { color: colors.highlight.darkest },
+      selected && { color: colors.primary.lightest },
+      disabled && { color: colors.secondary.light },
     ];
 
     return (
@@ -38,26 +42,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: ds.spacing.xxs,
     paddingHorizontal: ds.spacing.sm,
-    backgroundColor: ds.colors.highlight.lightest,
     borderRadius: ds.borderRadius.md,
   },
   tagText: {
     ...ds.font.caption.md,
-    color: ds.colors.highlight.darkest,
     textAlign: 'center',
     textTransform: 'uppercase',
-  },
-  selected: {
-    backgroundColor: ds.colors.highlight.darkest,
-  },
-  selectedText: {
-    color: ds.colors.primary.lightest,
-  },
-  disabled: {
-    backgroundColor: ds.colors.primary.light,
-    opacity: 0.6,
-  },
-  disabledText: {
-    color: ds.colors.secondary.light,
   },
 });

@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { ds } from '~/constants';
+import { useThemeColors } from '~/contexts/ThemeContext';
 
 type ButtonProps = {
   title?: string;
@@ -9,8 +10,20 @@ type ButtonProps = {
 
 export const Button = forwardRef<View, ButtonProps>(
   ({ title, variant = 'primary', ...touchableProps }, ref) => {
-    const buttonStyle = [styles.button, styles[`${variant}Button`], touchableProps.style];
-    const buttonTextStyle = [styles.buttonText, styles[`${variant}ButtonText`]];
+    const colors = useThemeColors();
+    const buttonStyle = [
+      styles.button,
+      styles[`${variant}Button`],
+      variant === 'primary' && { backgroundColor: colors.highlight.darkest },
+      variant === 'secondary' && { borderColor: colors.highlight.darkest },
+      touchableProps.style,
+    ];
+    const buttonTextStyle = [
+      styles.buttonText,
+      styles[`${variant}ButtonText`],
+      variant === 'primary' && { color: colors.primary.lightest },
+      variant === 'secondary' && { color: colors.highlight.darkest },
+    ];
     return (
       <TouchableOpacity ref={ref} {...touchableProps} style={buttonStyle}>
         <Text style={buttonTextStyle}>{title}</Text>
@@ -31,24 +44,24 @@ const styles = StyleSheet.create({
     paddingVertical: ds.spacing.sm,
   },
   primaryButton: {
-    backgroundColor: ds.colors.highlight.darkest,
+    // backgroundColor will be set dynamically
   },
   secondaryButton: {
     backgroundColor: 'transparent',
-    borderColor: ds.colors.highlight.darkest,
+    // borderColor will be set dynamically
     borderWidth: ds.borderWidth.sm,
     paddingHorizontal: ds.spacing.md - ds.borderWidth.sm,
     paddingVertical: ds.spacing.sm - ds.borderWidth.sm,
   },
   buttonText: {
-    color: ds.colors.primary.lightest,
+    // color will be set dynamically
     ...ds.font.action.md,
     textAlign: 'center',
   },
   primaryButtonText: {
-    color: ds.colors.primary.lightest,
+    // color will be set dynamically
   },
   secondaryButtonText: {
-    color: ds.colors.highlight.darkest,
+    // color will be set dynamically
   },
 });

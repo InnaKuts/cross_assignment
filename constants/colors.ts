@@ -68,7 +68,7 @@ export const colors = {
       light: '#4d1a1d',
     },
     highlight: {
-      darkest: '#1a7fff',
+      darkest: '#4da6ff',
       dark: '#2897ff',
       medium: '#6fbaff',
       light: '#0d2a4d',

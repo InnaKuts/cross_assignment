@@ -2,6 +2,7 @@ import React from 'react';
 import { Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ds } from '~/constants';
+import { useThemeColors } from '~/contexts/ThemeContext';
 
 interface DeleteButtonProps {
   onDelete: () => void;
@@ -17,9 +18,12 @@ export function DeleteButton({
   title = 'Delete',
   message = 'Are you sure you want to delete this item?',
   size = 24,
-  color = ds.colors.error.dark,
+  color,
   style,
 }: DeleteButtonProps) {
+  const colors = useThemeColors();
+  const iconColor = color || colors.error.dark;
+
   const handlePress = () => {
     Alert.alert(title, message, [
       {
@@ -35,6 +39,12 @@ export function DeleteButton({
   };
 
   return (
-    <Ionicons name="trash-outline" size={size} color={color} style={style} onPress={handlePress} />
+    <Ionicons
+      name="trash-outline"
+      size={size}
+      color={iconColor}
+      style={style}
+      onPress={handlePress}
+    />
   );
 }

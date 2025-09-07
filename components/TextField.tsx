@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import { StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native';
 import { ds } from '~/constants';
+import { useThemeColors } from '~/contexts/ThemeContext';
 
 type TextFieldProps = {
   label?: string;
@@ -9,14 +10,23 @@ type TextFieldProps = {
 
 export const TextField = forwardRef<TextInput, TextFieldProps>(
   ({ label, placeholder, style, ...textInputProps }, ref) => {
+    const colors = useThemeColors();
     return (
       <View style={styles.container}>
-        {label && <Text style={styles.label}>{label}</Text>}
+        {label && <Text style={[styles.label, { color: colors.secondary.dark }]}>{label}</Text>}
         <TextInput
           ref={ref}
           placeholder={placeholder}
-          placeholderTextColor={ds.colors.secondary.lightest}
-          style={[styles.textInput, style]}
+          placeholderTextColor={colors.secondary.lightest}
+          style={[
+            styles.textInput,
+            {
+              borderColor: colors.primary.darkest,
+              color: colors.secondary.darkest,
+              backgroundColor: colors.primary.lightest,
+            },
+            style,
+          ]}
           {...textInputProps}
         />
       </View>
@@ -32,17 +42,13 @@ const styles = StyleSheet.create({
   },
   label: {
     ...ds.font.heading.h5,
-    color: ds.colors.secondary.dark,
     marginBottom: ds.spacing.xs,
   },
   textInput: {
     ...ds.font.body.md,
     borderWidth: ds.borderWidth.xs,
-    borderColor: ds.colors.primary.darkest,
     borderRadius: ds.borderRadius.md,
     paddingHorizontal: ds.spacing.md,
     paddingVertical: ds.spacing.md,
-    color: ds.colors.secondary.darkest,
-    backgroundColor: ds.colors.primary.lightest,
   },
 });
