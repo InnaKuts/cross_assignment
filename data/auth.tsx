@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
+import uuid from 'react-native-uuid';
 
 export interface User {
   id: string;
@@ -15,20 +16,6 @@ interface AuthStore {
   setUser: (user: User | null) => void;
   clearUser: () => void;
 }
-
-const generateUserId = (): string => {
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 15);
-  return `user_${random}.${timestamp}`;
-};
-
-const generateUser = (): User => {
-  return {
-    id: generateUserId(),
-    isAnonymous: true,
-    createdAt: new Date(),
-  };
-};
 
 export const useAuthStore = create<AuthStore>()(
   persist(
@@ -56,14 +43,18 @@ export const useAuthStore = create<AuthStore>()(
 );
 
 export const authQueryOptions = {
-  queryKey: ['auth', 'init'],
+  queryKey: ['auth'],
   queryFn: async (): Promise<User> => {
     const { user, setUser } = useAuthStore.getState();
     if (user) {
       return user;
     }
 
-    const newUser = generateUser();
+    const newUser = {
+      id: `user_${uuid.v4()}`,
+      isAnonymous: false,
+      createdAt: new Date(),
+    };
     setUser(newUser);
     return newUser;
   },
@@ -85,6 +76,10 @@ export const useResetAuth = () => {
 
   return useCallback(() => {
     clearUser();
-    queryClient.invalidateQueries({ queryKey: authQueryOptions.queryKey });
+    queryClient.invalidateQueries({ queryKey: ['auth'] });
+    queryClient.invalidateQueries({ queryKey: ['clothes'] });
+    queryClient.invalidateQueries({ queryKey: ['cloth'] });
+    queryClient.invalidateQueries({ queryKey: ['outfits'] });
+    queryClient.invalidateQueries({ queryKey: ['outfit'] });
   }, [clearUser, queryClient]);
 };

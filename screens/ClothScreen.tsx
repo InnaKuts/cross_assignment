@@ -21,10 +21,11 @@ import {
   EmptyView,
   DeleteButton,
 } from '~/components';
-import { useCloth, useCreateCloth, useUpdateCloth, useDeleteCloth } from '~/data/queries';
+import { useCloth, useCreateCloth, useUpdateCloth, useDeleteCloth } from '~/data/api';
 import { Slot, Cloth } from '~/data/models';
 import { Ionicons } from '@expo/vector-icons';
 import { SCREENS } from '~/navigation/screens';
+import { resolvePhoto } from '~/components/helpers/resolvePhoto';
 
 type ClothRouteProp = RouteProp<ReactNavigation.RootParamList, typeof SCREENS.CLOTH>;
 
@@ -86,7 +87,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
 
   const [title, setTitle] = useState(cloth?.name || '');
   const [selectedSlot, setSelectedSlot] = useState(cloth?.slot || 'head');
-  const [image, setImage] = useState(cloth?.photo);
+  const [image, setImage] = useState(resolvePhoto(cloth?.photo));
 
   const pickImage = async () => {
     Alert.alert('Choose Image Source', 'Select where you want to get the image from', [

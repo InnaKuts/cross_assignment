@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { Button } from './Button';
 import { ds } from '~/constants';
 import { Ionicons } from '@expo/vector-icons';

@@ -1,7 +1,7 @@
 import { SafeAreaView, View, StyleSheet, Alert } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { ds } from '~/constants';
-import { useCreateOutfit, useDeleteOutfit, useOutfit, useUpdateOutfit } from '~/data/queries';
+import { useCreateOutfit, useDeleteOutfit, useOutfit, useUpdateOutfit } from '~/data/api';
 import { Button, EmptyView, ErrorView, LoadingView, TextField, DeleteButton } from '~/components';
 import { Outfit } from '~/data/models';
 import { useState, useLayoutEffect } from 'react';
@@ -98,7 +98,7 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
           onPress={() => {
             if (outfit) {
               updateOutfitMutation.mutate(
-                { id: outfit.id, name: title, clothIds: [] },
+                { id: outfit.id, name: title, clothes: [] },
                 {
                   onSuccess: () => {
                     navigation.goBack();
@@ -110,7 +110,7 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
               );
             } else {
               createOutfitMutation.mutate(
-                { name: title, clothIds: [] },
+                { name: title, clothes: [] },
                 {
                   onSuccess: () => {
                     navigation.goBack();

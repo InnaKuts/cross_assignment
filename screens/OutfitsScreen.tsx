@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import { EmptyView, ErrorView, Fab, LoadingView, OutfitsGrid } from '~/components';
+import { resolvePhoto } from '~/components/helpers/resolvePhoto';
 import { ds } from '~/constants';
-import { useOutfits } from '~/data/queries';
+import { useOutfits } from '~/data/api';
 import { SCREENS } from '~/navigation/screens';
 
 export default function Outfits() {
@@ -34,7 +35,7 @@ function OutfitsContent() {
         title: item.name,
         cards: item.clothes.map((cloth) => ({
           id: cloth.id,
-          image: cloth.photo,
+          image: resolvePhoto(cloth.photo),
           title: cloth.name,
         })),
         onEdit: () => {

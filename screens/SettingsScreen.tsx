@@ -42,7 +42,12 @@ export default function Settings() {
           <Text style={ds.font.body.md}>Anonymous: {user?.isAnonymous ? 'Yes' : 'No'}</Text>
         </View>
 
-        <Button title="Reset Auth" onPress={handleResetAuth} />
+        <Button
+          title="Reset Auth"
+          onPress={() => {
+            handleResetAuth();
+          }}
+        />
 
         <Button
           title="Overview"

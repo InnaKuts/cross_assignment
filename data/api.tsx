@@ -1,5 +1,15 @@
 import { z } from 'zod';
-import { ClothDB, OutfitDB, ClothDBSchema, OutfitDBSchema } from './schema';
+import { Cloth, Outfit, ClothSchema, OutfitSchema } from './models';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { authQueryOptions } from './auth';
+
+type IdData = {
+  id: string;
+};
+
+type ClothData = Omit<Cloth, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;
+
+type OutfitData = Omit<Outfit, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;
 
 const API_BASE_URL = 'https://683ab5db43bb370a86737e12.mockapi.io/api/v1';
 
@@ -16,38 +26,66 @@ const tryParseArray = <T, S extends z.ZodType<T>>(data: unknown, schema: S): T[]
   return data.map((item) => tryParse<T, S>(item, schema)).filter((item) => item !== null);
 };
 
-export const clothesApi = {
-  get: (userId: Pick<ClothDB, 'userId'>) => ({
-    queryKey: ['clothes', 'user', userId] as const,
-    queryFn: async (): Promise<Record<string, ClothDB>> => {
+export const useClothes = <T = Cloth[],>({ select }: { select?: (clothes: Cloth[]) => T }) => {
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    queryKey: ['clothes'] as const,
+    queryFn: async () => {
+      const { id: userId } = await queryClient.fetchQuery(authQueryOptions);
       const response = await fetch(`${API_BASE_URL}/clothes?userId=${userId}`);
+      if (response.status === 404) return [];
       if (!response.ok) throw new Error('Failed to fetch clothes');
       const data = await response.json();
-      const list = tryParseArray<ClothDB, typeof ClothDBSchema>(data, ClothDBSchema);
-      return Object.fromEntries(list.map((cloth) => [cloth.id, cloth]));
+      return tryParseArray<Cloth, typeof ClothSchema>(data, ClothSchema);
     },
-    enabled: !!userId,
-  }),
+    select,
+  });
+};
 
-  // Mutations
-  create: () => ({
-    mutationFn: async (clothData: ClothDB): Promise<ClothDB> => {
+export const useCloth = (id: string) =>
+  useQuery({
+    queryKey: ['cloth', id] as const,
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/clothes/${id}`);
+      if (!response.ok) throw new Error('Failed to fetch cloth');
+      const data = await response.json();
+      return tryParse<Cloth, typeof ClothSchema>(data, ClothSchema);
+    },
+  });
+
+export const useCreateCloth = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (clothData: ClothData) => {
+      const { id: userId } = await queryClient.fetchQuery(authQueryOptions);
       const response = await fetch(`${API_BASE_URL}/clothes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(clothData),
+        body: JSON.stringify({
+          userId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          ...clothData,
+        }),
       });
       if (!response.ok) throw new Error('Failed to create cloth');
       const data = await response.json();
-      return ClothDBSchema.parse(data);
+      console.log('data', data);
+      return ClothSchema.parse(data);
     },
-  }),
+    onSuccess: (result) => {
+      queryClient.setQueryData(['cloth', result.id], result);
+      queryClient.invalidateQueries({ queryKey: ['clothes'] });
+    },
+  });
+};
 
-  update: () => ({
-    mutationFn: async ({
-      id,
-      ...clothData
-    }: Pick<ClothDB, 'id'> & Partial<Omit<ClothDB, 'id'>>): Promise<ClothDB> => {
+export const useUpdateCloth = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...clothData }: Partial<ClothData> & IdData) => {
       const response = await fetch(`${API_BASE_URL}/clothes/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -55,51 +93,89 @@ export const clothesApi = {
       });
       if (!response.ok) throw new Error('Failed to update cloth');
       const data = await response.json();
-      return ClothDBSchema.parse(data);
+      return ClothSchema.parse(data);
     },
-  }),
-
-  delete: () => ({
-    mutationFn: async (id: Pick<ClothDB, 'id'>): Promise<void> => {
-      const response = await fetch(`${API_BASE_URL}/clothes/${id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to delete cloth');
+    onSuccess: (result) => {
+      queryClient.setQueryData(['cloth', result.id], result);
+      queryClient.invalidateQueries({ queryKey: ['clothes'] });
     },
-  }),
+  });
 };
 
-export const outfitsApi = {
-  get: (userId: Pick<OutfitDB, 'userId'>) => ({
-    queryKey: ['outfits', 'user', userId] as const,
-    queryFn: async (): Promise<Record<string, OutfitDB>> => {
+export const useDeleteCloth = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`${API_BASE_URL}/clothes/${id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to delete cloth');
+      const data = await response.json();
+      return ClothSchema.parse(data);
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ['cloth', result.id] });
+      queryClient.invalidateQueries({ queryKey: ['clothes'] });
+    },
+  });
+};
+
+export const useOutfits = <T = Outfit[],>({ select }: { select?: (outfits: Outfit[]) => T }) => {
+  const queryClient = useQueryClient();
+  return useQuery({
+    queryKey: ['outfits'] as const,
+    queryFn: async () => {
+      const { id: userId } = await queryClient.fetchQuery(authQueryOptions);
       const response = await fetch(`${API_BASE_URL}/outfits?userId=${userId}`);
+      if (response.status === 404) return [];
       if (!response.ok) throw new Error('Failed to fetch outfits');
       const data = await response.json();
-      const list = tryParseArray<OutfitDB, typeof OutfitDBSchema>(data, OutfitDBSchema);
-      return Object.fromEntries(list.map((outfit) => [outfit.id, outfit]));
+      return tryParseArray<Outfit, typeof OutfitSchema>(data, OutfitSchema);
     },
-    enabled: !!userId,
-  }),
+    select,
+  });
+};
 
-  create: () => ({
-    mutationFn: async (outfitData: OutfitDB): Promise<OutfitDB> => {
+export const useOutfit = (id: string) => {
+  return useQuery({
+    queryKey: ['outfit', id] as const,
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE_URL}/outfits/${id}`);
+      if (!response.ok) throw new Error('Failed to fetch outfit');
+      const data = await response.json();
+      return tryParse<Outfit, typeof OutfitSchema>(data, OutfitSchema);
+    },
+  });
+};
+
+export const useCreateOutfit = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (outfitData: OutfitData) => {
+      const { id: userId } = await queryClient.fetchQuery(authQueryOptions);
       const response = await fetch(`${API_BASE_URL}/outfits`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(outfitData),
+        body: JSON.stringify({
+          userId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          ...outfitData,
+        }),
       });
       if (!response.ok) throw new Error('Failed to create outfit');
       const data = await response.json();
-      return OutfitDBSchema.parse(data);
+      return OutfitSchema.parse(data);
     },
-  }),
+    onSuccess: (result) => {
+      queryClient.setQueryData(['outfit', result.id], result);
+      queryClient.invalidateQueries({ queryKey: ['outfits'] });
+    },
+  });
+};
 
-  update: () => ({
-    mutationFn: async ({
-      id,
-      ...outfitData
-    }: Pick<OutfitDB, 'id'> & Partial<Omit<OutfitDB, 'id'>>): Promise<OutfitDB> => {
+export const useUpdateOutfit = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...outfitData }: Partial<OutfitData> & IdData) => {
       const response = await fetch(`${API_BASE_URL}/outfits/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -107,16 +183,27 @@ export const outfitsApi = {
       });
       if (!response.ok) throw new Error('Failed to update outfit');
       const data = await response.json();
-      return OutfitDBSchema.parse(data);
+      return OutfitSchema.parse(data);
     },
-  }),
+    onSuccess: (result) => {
+      queryClient.setQueryData(['outfit', result.id], result);
+      queryClient.invalidateQueries({ queryKey: ['outfits'] });
+    },
+  });
+};
 
-  delete: () => ({
-    mutationFn: async (id: Pick<OutfitDB, 'id'>): Promise<void> => {
-      const response = await fetch(`${API_BASE_URL}/outfits/${id}`, {
-        method: 'DELETE',
-      });
+export const useDeleteOutfit = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`${API_BASE_URL}/outfits/${id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Failed to delete outfit');
+      const data = await response.json();
+      return OutfitSchema.parse(data);
     },
-  }),
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ['outfit', result.id] });
+      queryClient.invalidateQueries({ queryKey: ['outfits'] });
+    },
+  });
 };
