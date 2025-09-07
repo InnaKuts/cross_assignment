@@ -37,4 +37,42 @@ export const colors = {
       lightest: '#eaf2ff',
     },
   },
+  dark: {
+    primary: {
+      darkest: '#0a0a0b',
+      dark: '#1a1a1d',
+      medium: '#2a2a2f',
+      light: '#3a3a42',
+      lightest: '#4a4a55',
+    },
+    secondary: {
+      darkest: '#e5e6ec',
+      dark: '#d4d6dd',
+      medium: '#c5c6cc',
+      light: '#b6b7bd',
+      lightest: '#a8a9ae',
+    },
+    success: {
+      dark: '#2d9d7a',
+      medium: '#3ac0a0',
+      light: '#1a4d3a',
+    },
+    warning: {
+      dark: '#f07a4a',
+      medium: '#ffb37c',
+      light: '#4d2a1a',
+    },
+    error: {
+      dark: '#f54252',
+      medium: '#ff616d',
+      light: '#4d1a1d',
+    },
+    highlight: {
+      darkest: '#1a7fff',
+      dark: '#2897ff',
+      medium: '#6fbaff',
+      light: '#0d2a4d',
+      lightest: '#1a3a66',
+    },
+  },
 } as const;
