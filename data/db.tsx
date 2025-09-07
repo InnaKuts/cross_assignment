@@ -17,6 +17,7 @@ export type Image = z.infer<typeof ImageSchema>;
 
 export const ClothDBSchema = z.object({
   id: z.uuid(),
+  userId: z.uuid(),
   name: z.string(),
   slot: SlotSchema,
   photo: ImageSchema.optional(),
@@ -27,6 +28,7 @@ export type ClothDB = z.infer<typeof ClothDBSchema>;
 
 export const OutfitDBSchema = z.object({
   id: z.uuid(),
+  userId: z.uuid(),
   name: z.string(),
   clothIds: z.array(z.uuid()),
   createdAt: z.date(),

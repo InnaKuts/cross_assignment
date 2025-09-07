@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { OutfitDB, useWardrobeStore } from './db';
 import { Cloth, Outfit, Slot } from './models';
 import { joinClothData, joinOutfitData, joinClothesBySlot } from './joins';
+import { authQueryOptions } from './auth';
 
 // Async functions that return client models
 const fetchClothes = async (): Promise<Cloth[]> => {
@@ -77,8 +78,12 @@ export const useCreateCloth = () => {
   const addCloth = useWardrobeStore((state) => state.addCloth);
 
   return useMutation({
-    mutationFn: async (clothData: Omit<Cloth, 'id' | 'createdAt' | 'updatedAt'>) => {
-      addCloth(clothData);
+    mutationFn: async (clothData: Omit<Cloth, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => {
+      const user = await queryClient.fetchQuery(authQueryOptions);
+      addCloth({
+        ...clothData,
+        userId: user.id,
+      });
       return clothData;
     },
     onSuccess: () => {
@@ -109,8 +114,12 @@ export const useCreateOutfit = () => {
   const addOutfit = useWardrobeStore((state) => state.addOutfit);
 
   return useMutation({
-    mutationFn: async (outfitData: Omit<OutfitDB, 'id' | 'createdAt' | 'updatedAt'>) => {
-      addOutfit(outfitData);
+    mutationFn: async (outfitData: Omit<OutfitDB, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => {
+      const user = await queryClient.fetchQuery(authQueryOptions);
+      addOutfit({
+        ...outfitData,
+        userId: user.id,
+      });
       return outfitData;
     },
     onSuccess: () => {
