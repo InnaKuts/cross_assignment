@@ -14,12 +14,24 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'react-native-gesture-handler';
 
 import Navigation from './navigation';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import { ds } from './constants';
 
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
 export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
+
+function AppContent() {
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_600SemiBold,
@@ -27,8 +39,11 @@ export default function App() {
     Inter_800ExtraBold,
   });
 
-  const colorScheme = useColorScheme();
-  const theme = useMemo(() => (colorScheme === 'dark' ? DarkTheme : DefaultTheme), [colorScheme]);
+  const { colors } = useTheme();
+  const navigationTheme = useMemo(
+    () => (colors === ds.theme.dark.colors ? DarkTheme : DefaultTheme),
+    [colors]
+  );
 
   useEffect(() => {
     if (fontsLoaded) {
@@ -40,9 +55,5 @@ export default function App() {
     return null;
   }
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Navigation theme={theme} />
-    </QueryClientProvider>
-  );
+  return <Navigation theme={navigationTheme} />;
 }

@@ -3,12 +3,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ds } from '~/constants';
 import { Button, CardsGrid, Fab, Tags, TextField } from '~/components';
 import { requireImage } from '~/components/helpers/requireImage';
+import { useThemeColors } from '~/contexts/ThemeContext';
 
 export default function Overview() {
+  const colors = useThemeColors();
+
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.primary.lightest }]}>
       <View style={styles.container}>
-        <Text style={ds.font.heading.h1}>Overview</Text>
+        <Text style={[ds.font.heading.h1, { color: colors.secondary.darkest }]}>Overview</Text>
         <Button title="Primary Button" onPress={() => {}} />
         <Button title="Secondary Button" variant="secondary" onPress={() => {}} />
         <View style={styles.fabContainer}>
@@ -50,7 +53,6 @@ export default function Overview() {
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: ds.colors.primary.lightest,
   },
   container: {
     flex: 1,

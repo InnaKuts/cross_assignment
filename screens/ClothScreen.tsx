@@ -25,6 +25,7 @@ import { useCloth, useCreateCloth, useUpdateCloth, useDeleteCloth } from '~/data
 import { Slot, Cloth } from '~/data/models';
 import { Ionicons } from '@expo/vector-icons';
 import { SCREENS } from '~/navigation/screens';
+import { useThemeColors } from '~/contexts/ThemeContext';
 
 type ClothRouteProp = RouteProp<ReactNavigation.RootParamList, typeof SCREENS.CLOTH>;
 
@@ -39,9 +40,10 @@ const SLOT_OPTIONS = [
 export default function ClothScreen() {
   const route = useRoute<ClothRouteProp>();
   const { clothId } = route.params;
+  const colors = useThemeColors();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.primary.lightest }]}>
       <ClothContent clothId={clothId} />
     </SafeAreaView>
   );
@@ -80,6 +82,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
   const updateClothMutation = useUpdateCloth();
   const deleteClothMutation = useDeleteCloth();
   const navigation = useNavigation();
+  const colors = useThemeColors();
 
   const isPending =
     updateClothMutation.isPending || deleteClothMutation.isPending || createClothMutation.isPending;
@@ -224,7 +227,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
             <Image source={image} style={styles.image} />
           ) : (
             <View style={styles.imagePlaceholder}>
-              <Ionicons name="camera" size={24} color={ds.colors.highlight.darkest} />
+              <Ionicons name="camera" size={24} color={colors.highlight.darkest} />
             </View>
           )}
         </TouchableOpacity>
@@ -232,7 +235,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
 
       {/* Slot Tags */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Slot</Text>
+        <Text style={[styles.sectionTitle, { color: colors.secondary.darkest }]}>Slot</Text>
         <Tags
           disabled={isPending}
           tags={SLOT_OPTIONS}
@@ -270,7 +273,6 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: ds.colors.primary.lightest,
   },
   container: {
     flex: 1,

@@ -4,6 +4,14 @@ import { semanticFonts } from './fonts';
 
 export const ds = {
   colors: colors.light,
+  theme: {
+    light: {
+      colors: colors.light,
+    },
+    dark: {
+      colors: colors.dark,
+    },
+  },
   size,
 
   breakpoints: {

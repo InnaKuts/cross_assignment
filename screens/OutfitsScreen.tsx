@@ -4,13 +4,16 @@ import { EmptyView, ErrorView, Fab, LoadingView, OutfitsGrid } from '~/component
 import { ds } from '~/constants';
 import { useOutfits } from '~/data/api';
 import { SCREENS } from '~/navigation/screens';
+import { useThemeColors } from '~/contexts/ThemeContext';
 
 export default function Outfits() {
   const navigation = useNavigation();
+  const colors = useThemeColors();
+
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.primary.lightest }]}>
       <View style={styles.container}>
-        <Text style={ds.font.heading.h1}>Outfits</Text>
+        <Text style={[ds.font.heading.h1, { color: colors.secondary.darkest }]}>Outfits</Text>
         <OutfitsContent />
       </View>
       <View style={styles.fabContainer}>
@@ -69,7 +72,6 @@ function OutfitsContent() {
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: ds.colors.primary.lightest,
   },
   container: {
     flex: 1,

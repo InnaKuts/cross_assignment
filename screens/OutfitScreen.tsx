@@ -6,15 +6,17 @@ import { Button, EmptyView, ErrorView, LoadingView, TextField, DeleteButton } fr
 import { Outfit } from '~/data/models';
 import { useState, useLayoutEffect } from 'react';
 import { SCREENS } from '~/navigation/screens';
+import { useThemeColors } from '~/contexts/ThemeContext';
 
 type OutfitRouteProp = RouteProp<ReactNavigation.RootParamList, typeof SCREENS.OUTFIT>;
 
 export default function OutfitScreen() {
   const route = useRoute<OutfitRouteProp>();
   const { outfitId } = route.params;
+  const colors = useThemeColors();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.primary.lightest }]}>
       <OutfitContent outfitId={outfitId} />
     </SafeAreaView>
   );
@@ -132,7 +134,6 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: ds.colors.primary.lightest,
   },
   container: {
     flex: 1,

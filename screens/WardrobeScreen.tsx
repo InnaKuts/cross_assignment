@@ -4,14 +4,16 @@ import { CardsGrid, Fab, LoadingView, EmptyView, ErrorView } from '~/components'
 import { ds } from '~/constants';
 import { useClothes } from '~/data/api';
 import { SCREENS } from '~/navigation/screens';
+import { useThemeColors } from '~/contexts/ThemeContext';
 
 export default function Wardrobe() {
   const navigation = useNavigation();
+  const colors = useThemeColors();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.primary.lightest }]}>
       <View style={styles.container}>
-        <Text style={ds.font.heading.h1}>Wardrobe</Text>
+        <Text style={[ds.font.heading.h1, { color: colors.secondary.darkest }]}>Wardrobe</Text>
         <WardrobeContent />
       </View>
       <View style={styles.fabContainer}>
@@ -67,7 +69,6 @@ function WardrobeContent() {
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: ds.colors.primary.lightest,
   },
   container: {
     flex: 1,
