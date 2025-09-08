@@ -13,17 +13,18 @@ type OutfitData = Omit<Outfit, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;
 
 const API_BASE_URL = 'https://683ab5db43bb370a86737e12.mockapi.io/api/v1';
 
-const tryParse = <T, S extends z.ZodType<T>>(data: unknown, schema: S): T | null => {
-  try {
-    return schema.parse(data);
-  } catch {
-    return null;
-  }
-};
-
-const tryParseArray = <T, S extends z.ZodType<T>>(data: unknown, schema: S): T[] => {
+const safeParseArray = <T, S extends z.ZodType<T>>(data: unknown, schema: S): T[] => {
   if (!Array.isArray(data)) throw new Error('Expected data to be an array');
-  return data.map((item) => tryParse<T, S>(item, schema)).filter((item) => item !== null);
+
+  const parsedItems: T[] = [];
+  for (const item of data) {
+    try {
+      parsedItems.push(schema.parse(item));
+    } catch (error) {
+      console.warn('Skipping invalid item:', error);
+    }
+  }
+  return parsedItems;
 };
 
 export const useClothes = <T = Cloth[],>({ select }: { select?: (clothes: Cloth[]) => T }) => {
@@ -36,7 +37,7 @@ export const useClothes = <T = Cloth[],>({ select }: { select?: (clothes: Cloth[
       if (response.status === 404) return [];
       if (!response.ok) throw new Error('Failed to fetch clothes');
       const data = await response.json();
-      return tryParseArray<Cloth, typeof ClothSchema>(data, ClothSchema);
+      return safeParseArray<Cloth, typeof ClothSchema>(data, ClothSchema);
     },
     select,
   });
@@ -50,7 +51,7 @@ export const useCloth = (id: string) => {
       const response = await fetch(`${API_BASE_URL}/clothes/${id}`);
       if (!response.ok) throw new Error('Failed to fetch cloth');
       const data = await response.json();
-      return tryParse<Cloth, typeof ClothSchema>(data, ClothSchema);
+      return ClothSchema.parse(data);
     },
   });
 };
@@ -87,9 +88,12 @@ export const useUpdateCloth = () => {
   return useMutation({
     mutationFn: async ({ id, ...clothData }: Partial<ClothData> & IdData) => {
       const response = await fetch(`${API_BASE_URL}/clothes/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(clothData),
+        body: JSON.stringify({
+          ...clothData,
+          updatedAt: new Date(),
+        }),
       });
       if (!response.ok) throw new Error('Failed to update cloth');
       const data = await response.json();
@@ -127,7 +131,7 @@ export const useOutfits = <T = Outfit[],>({ select }: { select?: (outfits: Outfi
       if (response.status === 404) return [];
       if (!response.ok) throw new Error('Failed to fetch outfits');
       const data = await response.json();
-      return tryParseArray<Outfit, typeof OutfitSchema>(data, OutfitSchema);
+      return safeParseArray<Outfit, typeof OutfitSchema>(data, OutfitSchema);
     },
     select,
   });
@@ -141,7 +145,7 @@ export const useOutfit = (id: string) => {
       const response = await fetch(`${API_BASE_URL}/outfits/${id}`);
       if (!response.ok) throw new Error('Failed to fetch outfit');
       const data = await response.json();
-      return tryParse<Outfit, typeof OutfitSchema>(data, OutfitSchema);
+      return OutfitSchema.parse(data);
     },
   });
 };
@@ -177,9 +181,12 @@ export const useUpdateOutfit = () => {
   return useMutation({
     mutationFn: async ({ id, ...outfitData }: Partial<OutfitData> & IdData) => {
       const response = await fetch(`${API_BASE_URL}/outfits/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(outfitData),
+        body: JSON.stringify({
+          ...outfitData,
+          updatedAt: new Date(),
+        }),
       });
       if (!response.ok) throw new Error('Failed to update outfit');
       const data = await response.json();
