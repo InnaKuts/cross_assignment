@@ -1,17 +1,21 @@
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import { Button } from '~/components';
+import { Button, TextField } from '~/components';
 import { ds } from '~/constants';
 import { SCREENS } from '~/navigation/screens';
-import { useResetUser, useUser } from '~/data/auth';
+import { useResetUser, useUser, useUpdateUserName } from '~/data/auth';
 import { useThemeMode, useThemeColors } from '~/contexts/ThemeContext';
+import { useState } from 'react';
 
 export default function Settings() {
   const navigation = useNavigation();
   const user = useUser();
   const resetAuth = useResetUser();
+  const updateUserName = useUpdateUserName();
   const { mode, setMode, toggle } = useThemeMode();
   const colors = useThemeColors();
+  const [name, setName] = useState(user?.name || '');
+  const [isEditingName, setIsEditingName] = useState(false);
 
   const handleResetAuth = () => {
     Alert.alert(
@@ -39,7 +43,51 @@ export default function Settings() {
         <Text style={[ds.font.heading.h1, { color: colors.secondary.darkest }]}>Settings</Text>
 
         <View style={[styles.authSection, { backgroundColor: colors.highlight.lightest }]}>
-          <Text style={[ds.font.heading.h3, { color: colors.secondary.darkest }]}>Auth Status</Text>
+          <Text style={[ds.font.heading.h3, { color: colors.secondary.darkest }]}>
+            User Profile
+          </Text>
+
+          {isEditingName ? (
+            <View style={styles.nameEditContainer}>
+              <TextField
+                value={name}
+                onChangeText={setName}
+                placeholder="Enter your name"
+                label="Name"
+              />
+              <View style={styles.nameEditButtons}>
+                <Button
+                  title="Save"
+                  onPress={() => {
+                    if (name.trim()) {
+                      updateUserName(name.trim());
+                      setIsEditingName(false);
+                    }
+                  }}
+                />
+                <Button
+                  title="Cancel"
+                  variant="secondary"
+                  onPress={() => {
+                    setName(user?.name || '');
+                    setIsEditingName(false);
+                  }}
+                />
+              </View>
+            </View>
+          ) : (
+            <View style={styles.nameDisplayContainer}>
+              <Text style={[ds.font.body.md, { color: colors.secondary.darkest }]}>
+                Name: {user?.name || 'None'}
+              </Text>
+              <Button
+                title="Edit Name"
+                variant="secondary"
+                onPress={() => setIsEditingName(true)}
+              />
+            </View>
+          )}
+
           <Text style={[ds.font.body.md, { color: colors.secondary.darkest }]}>
             User ID: {user?.id || 'None'}
           </Text>
@@ -143,6 +191,18 @@ export const styles = StyleSheet.create({
     borderRadius: ds.borderRadius.md,
     gap: ds.spacing.sm,
     width: '100%',
+  },
+  nameEditContainer: {
+    gap: ds.spacing.sm,
+  },
+  nameEditButtons: {
+    flexDirection: 'row',
+    gap: ds.spacing.sm,
+  },
+  nameDisplayContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   themeSection: {
     padding: ds.spacing.md,

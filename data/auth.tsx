@@ -6,6 +6,7 @@ import uuid from 'react-native-uuid';
 
 export interface User {
   id: string;
+  name: string;
   isAnonymous: boolean;
   createdAt: Date;
 }
@@ -13,14 +14,21 @@ export interface User {
 interface AuthStore {
   user: User | null;
   setUser: (user: User | null) => void;
+  updateUserName: (name: string) => void;
   clearUser: () => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       setUser: (user) => set({ user }),
+      updateUserName: (name) => {
+        const { user } = get();
+        if (user) {
+          set({ user: { ...user, name } });
+        }
+      },
       clearUser: () => set({ user: null }),
     }),
     {
@@ -53,6 +61,7 @@ export const useUser = () => {
     initialized.current = true;
     const newUser = {
       id: `user_${uuid.v4()}`,
+      name: 'Anonymous User',
       isAnonymous: true,
       createdAt: new Date(),
     };
@@ -63,5 +72,7 @@ export const useUser = () => {
 };
 
 export const useResetUser = () => useAuthStore((state) => state.clearUser);
+
+export const useUpdateUserName = () => useAuthStore((state) => state.updateUserName);
 
 export const useUserId = () => useAuthStore((state) => state.user?.id);
