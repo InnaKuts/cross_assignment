@@ -4,15 +4,38 @@ import { Button, TextField } from '~/components';
 import { ds } from '~/constants';
 import { SCREENS } from '~/navigation/screens';
 import { useResetUser, useUser, useUpdateUserName } from '~/data/auth';
-import { useThemeMode, useThemeColors } from '~/contexts/ThemeContext';
+import { useThemeMode, useThemeColors, ThemeMode } from '~/contexts/ThemeContext';
 import { useState } from 'react';
 
 export default function Settings() {
   const navigation = useNavigation();
+  const { mode, setMode, toggle } = useThemeMode();
+  const colors = useThemeColors();
+
+  return (
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.primary.lightest }]}>
+      <View style={styles.container}>
+        <Text style={[ds.font.heading.h1, { color: colors.secondary.darkest }]}>Settings</Text>
+
+        <UserProfileSection />
+
+        <ThemeSection mode={mode} setMode={setMode} toggle={toggle} />
+
+        <Button
+          title="Overview"
+          onPress={() => {
+            navigation.navigate(SCREENS.OVERVIEW);
+          }}
+        />
+      </View>
+    </SafeAreaView>
+  );
+}
+
+function UserProfileSection() {
   const user = useUser();
   const resetAuth = useResetUser();
   const updateUserName = useUpdateUserName();
-  const { mode, setMode, toggle } = useThemeMode();
   const colors = useThemeColors();
   const [name, setName] = useState(user?.name || '');
   const [isEditingName, setIsEditingName] = useState(false);
@@ -38,141 +61,128 @@ export default function Settings() {
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.primary.lightest }]}>
-      <View style={styles.container}>
-        <Text style={[ds.font.heading.h1, { color: colors.secondary.darkest }]}>Settings</Text>
+    <View style={[styles.authSection, { backgroundColor: colors.highlight.lightest }]}>
+      <Text style={[ds.font.heading.h3, { color: colors.secondary.darkest }]}>User Profile</Text>
 
-        <View style={[styles.authSection, { backgroundColor: colors.highlight.lightest }]}>
-          <Text style={[ds.font.heading.h3, { color: colors.secondary.darkest }]}>
-            User Profile
-          </Text>
-
-          {isEditingName ? (
-            <View style={styles.nameEditContainer}>
-              <TextField
-                value={name}
-                onChangeText={setName}
-                placeholder="Enter your name"
-                label="Name"
-              />
-              <View style={styles.nameEditButtons}>
-                <Button
-                  title="Save"
-                  onPress={() => {
-                    if (name.trim()) {
-                      updateUserName(name.trim());
-                      setIsEditingName(false);
-                    }
-                  }}
-                />
-                <Button
-                  title="Cancel"
-                  variant="secondary"
-                  onPress={() => {
-                    setName(user?.name || '');
-                    setIsEditingName(false);
-                  }}
-                />
-              </View>
-            </View>
-          ) : (
-            <View style={styles.nameDisplayContainer}>
-              <Text style={[ds.font.body.md, { color: colors.secondary.darkest }]}>
-                Name: {user?.name || 'None'}
-              </Text>
-              <Button
-                title="Edit Name"
-                variant="secondary"
-                onPress={() => setIsEditingName(true)}
-              />
-            </View>
-          )}
-
-          <Text style={[ds.font.body.md, { color: colors.secondary.darkest }]}>
-            User ID: {user?.id || 'None'}
-          </Text>
-          <Text style={[ds.font.body.md, { color: colors.secondary.darkest }]}>
-            Anonymous: {user?.isAnonymous ? 'Yes' : 'No'}
-          </Text>
-        </View>
-
-        <View style={[styles.themeSection, { backgroundColor: colors.highlight.lightest }]}>
-          <Text style={[ds.font.heading.h3, { color: colors.secondary.darkest }]}>Theme</Text>
-          <Text style={[ds.font.body.md, { color: colors.secondary.darkest }]}>
-            Current: {mode.charAt(0).toUpperCase() + mode.slice(1)}
-          </Text>
-
-          <View style={styles.themeButtons}>
-            <TouchableOpacity
-              style={[
-                styles.themeButton,
-                { backgroundColor: colors.primary.medium },
-                mode === 'light' && styles.themeButtonActive,
-              ]}
-              onPress={() => setMode('light')}>
-              <Text
-                style={[
-                  styles.themeButtonText,
-                  { color: colors.secondary.darkest },
-                  mode === 'light' && styles.themeButtonTextActive,
-                ]}>
-                Light
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.themeButton,
-                { backgroundColor: colors.primary.medium },
-                mode === 'dark' && styles.themeButtonActive,
-              ]}
-              onPress={() => setMode('dark')}>
-              <Text
-                style={[
-                  styles.themeButtonText,
-                  { color: colors.secondary.darkest },
-                  mode === 'dark' && styles.themeButtonTextActive,
-                ]}>
-                Dark
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.themeButton,
-                { backgroundColor: colors.primary.medium },
-                mode === 'system' && styles.themeButtonActive,
-              ]}
-              onPress={() => setMode('system')}>
-              <Text
-                style={[
-                  styles.themeButtonText,
-                  { color: colors.secondary.darkest },
-                  mode === 'system' && styles.themeButtonTextActive,
-                ]}>
-                System
-              </Text>
-            </TouchableOpacity>
+      {isEditingName ? (
+        <View style={styles.nameEditContainer}>
+          <TextField
+            value={name}
+            onChangeText={setName}
+            placeholder="Enter your name"
+            label="Name"
+          />
+          <View style={styles.nameEditButtons}>
+            <Button
+              title="Save"
+              onPress={() => {
+                if (name.trim()) {
+                  updateUserName(name.trim());
+                  setIsEditingName(false);
+                }
+              }}
+            />
+            <Button
+              title="Cancel"
+              variant="secondary"
+              onPress={() => {
+                setName(user?.name || '');
+                setIsEditingName(false);
+              }}
+            />
           </View>
-
-          <Button title="Toggle Theme" onPress={toggle} />
         </View>
+      ) : (
+        <View style={styles.nameDisplayContainer}>
+          <Text style={[ds.font.body.md, { color: colors.secondary.darkest }]}>
+            Name: {user?.name || 'None'}
+          </Text>
+          <Button title="Edit Name" variant="secondary" onPress={() => setIsEditingName(true)} />
+        </View>
+      )}
 
-        <Button
-          title="Reset Auth"
-          onPress={() => {
-            handleResetAuth();
-          }}
-        />
+      <Text style={[ds.font.body.md, { color: colors.secondary.darkest }]}>
+        User ID: {user?.id || 'None'}
+      </Text>
 
-        <Button
-          title="Overview"
-          onPress={() => {
-            navigation.navigate(SCREENS.OVERVIEW);
-          }}
-        />
+      <Button title="Reset Auth" onPress={handleResetAuth} />
+    </View>
+  );
+}
+
+function ThemeSection({
+  mode,
+  setMode,
+  toggle,
+}: {
+  mode: ThemeMode;
+  setMode: (mode: ThemeMode) => void;
+  toggle: () => void;
+}) {
+  const colors = useThemeColors();
+
+  return (
+    <View style={[styles.themeSection, { backgroundColor: colors.highlight.lightest }]}>
+      <Text style={[ds.font.heading.h3, { color: colors.secondary.darkest }]}>Theme</Text>
+      <Text style={[ds.font.body.md, { color: colors.secondary.darkest }]}>
+        Current: {mode.charAt(0).toUpperCase() + mode.slice(1)}
+      </Text>
+
+      <View style={styles.themeButtons}>
+        <TouchableOpacity
+          style={[
+            styles.themeButton,
+            { backgroundColor: colors.primary.medium },
+            mode === 'light' && styles.themeButtonActive,
+          ]}
+          onPress={() => setMode('light')}>
+          <Text
+            style={[
+              styles.themeButtonText,
+              { color: colors.secondary.darkest },
+              mode === 'light' && styles.themeButtonTextActive,
+            ]}>
+            Light
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.themeButton,
+            { backgroundColor: colors.primary.medium },
+            mode === 'dark' && styles.themeButtonActive,
+          ]}
+          onPress={() => setMode('dark')}>
+          <Text
+            style={[
+              styles.themeButtonText,
+              { color: colors.secondary.darkest },
+              mode === 'dark' && styles.themeButtonTextActive,
+            ]}>
+            Dark
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.themeButton,
+            { backgroundColor: colors.primary.medium },
+            mode === 'system' && styles.themeButtonActive,
+          ]}
+          onPress={() => setMode('system')}>
+          <Text
+            style={[
+              styles.themeButtonText,
+              { color: colors.secondary.darkest },
+              mode === 'system' && styles.themeButtonTextActive,
+            ]}>
+            System
+          </Text>
+        </TouchableOpacity>
       </View>
-    </SafeAreaView>
+
+      <Button title="Toggle Theme" onPress={toggle} />
+    </View>
   );
 }
 
