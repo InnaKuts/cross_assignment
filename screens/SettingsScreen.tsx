@@ -3,13 +3,13 @@ import { SafeAreaView, View, Text, StyleSheet, Alert, TouchableOpacity } from 'r
 import { Button } from '~/components';
 import { ds } from '~/constants';
 import { SCREENS } from '~/navigation/screens';
-import { useAuth, useResetAuth } from '~/data/auth';
+import { useResetUser, useUser } from '~/data/auth';
 import { useThemeMode, useThemeColors } from '~/contexts/ThemeContext';
 
 export default function Settings() {
   const navigation = useNavigation();
-  const { data: user, isLoading } = useAuth();
-  const resetAuth = useResetAuth();
+  const user = useUser();
+  const resetAuth = useResetUser();
   const { mode, setMode, toggle } = useThemeMode();
   const colors = useThemeColors();
 
@@ -40,9 +40,6 @@ export default function Settings() {
 
         <View style={[styles.authSection, { backgroundColor: colors.highlight.lightest }]}>
           <Text style={[ds.font.heading.h3, { color: colors.secondary.darkest }]}>Auth Status</Text>
-          <Text style={[ds.font.body.md, { color: colors.secondary.darkest }]}>
-            Loading: {isLoading ? 'Yes' : 'No'}
-          </Text>
           <Text style={[ds.font.body.md, { color: colors.secondary.darkest }]}>
             User ID: {user?.id || 'None'}
           </Text>

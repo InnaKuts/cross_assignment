@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { Cloth, Outfit, ClothSchema, OutfitSchema } from './models';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { authQueryOptions } from './auth';
+import { useUserId } from './auth';
 
 type IdData = {
   id: string;
@@ -27,12 +27,11 @@ const tryParseArray = <T, S extends z.ZodType<T>>(data: unknown, schema: S): T[]
 };
 
 export const useClothes = <T = Cloth[],>({ select }: { select?: (clothes: Cloth[]) => T }) => {
-  const queryClient = useQueryClient();
+  const userId = useUserId();
 
   return useQuery({
-    queryKey: ['clothes'] as const,
+    queryKey: ['clothes', userId] as const,
     queryFn: async () => {
-      const { id: userId } = await queryClient.fetchQuery(authQueryOptions);
       const response = await fetch(`${API_BASE_URL}/clothes?userId=${userId}`);
       if (response.status === 404) return [];
       if (!response.ok) throw new Error('Failed to fetch clothes');
@@ -43,9 +42,10 @@ export const useClothes = <T = Cloth[],>({ select }: { select?: (clothes: Cloth[
   });
 };
 
-export const useCloth = (id: string) =>
-  useQuery({
-    queryKey: ['cloth', id] as const,
+export const useCloth = (id: string) => {
+  const userId = useUserId();
+  return useQuery({
+    queryKey: ['cloth', id, userId] as const,
     queryFn: async () => {
       const response = await fetch(`${API_BASE_URL}/clothes/${id}`);
       if (!response.ok) throw new Error('Failed to fetch cloth');
@@ -53,13 +53,14 @@ export const useCloth = (id: string) =>
       return tryParse<Cloth, typeof ClothSchema>(data, ClothSchema);
     },
   });
+};
 
 export const useCreateCloth = () => {
   const queryClient = useQueryClient();
+  const userId = useUserId();
 
   return useMutation({
     mutationFn: async (clothData: ClothData) => {
-      const { id: userId } = await queryClient.fetchQuery(authQueryOptions);
       const response = await fetch(`${API_BASE_URL}/clothes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -75,8 +76,8 @@ export const useCreateCloth = () => {
       return ClothSchema.parse(data);
     },
     onSuccess: (result) => {
-      queryClient.setQueryData(['cloth', result.id], result);
-      queryClient.invalidateQueries({ queryKey: ['clothes'] });
+      queryClient.setQueryData(['cloth', result.id, result.userId], result);
+      queryClient.invalidateQueries({ queryKey: ['clothes', result.userId] });
     },
   });
 };
@@ -95,8 +96,8 @@ export const useUpdateCloth = () => {
       return ClothSchema.parse(data);
     },
     onSuccess: (result) => {
-      queryClient.setQueryData(['cloth', result.id], result);
-      queryClient.invalidateQueries({ queryKey: ['clothes'] });
+      queryClient.setQueryData(['cloth', result.id, result.userId], result);
+      queryClient.invalidateQueries({ queryKey: ['clothes', result.userId] });
     },
   });
 };
@@ -111,18 +112,17 @@ export const useDeleteCloth = () => {
       return ClothSchema.parse(data);
     },
     onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ['cloth', result.id] });
-      queryClient.invalidateQueries({ queryKey: ['clothes'] });
+      queryClient.invalidateQueries({ queryKey: ['cloth', result.id, result.userId] });
+      queryClient.invalidateQueries({ queryKey: ['clothes', result.userId] });
     },
   });
 };
 
 export const useOutfits = <T = Outfit[],>({ select }: { select?: (outfits: Outfit[]) => T }) => {
-  const queryClient = useQueryClient();
+  const userId = useUserId();
   return useQuery({
-    queryKey: ['outfits'] as const,
+    queryKey: ['outfits', userId] as const,
     queryFn: async () => {
-      const { id: userId } = await queryClient.fetchQuery(authQueryOptions);
       const response = await fetch(`${API_BASE_URL}/outfits?userId=${userId}`);
       if (response.status === 404) return [];
       if (!response.ok) throw new Error('Failed to fetch outfits');
@@ -134,8 +134,9 @@ export const useOutfits = <T = Outfit[],>({ select }: { select?: (outfits: Outfi
 };
 
 export const useOutfit = (id: string) => {
+  const userId = useUserId();
   return useQuery({
-    queryKey: ['outfit', id] as const,
+    queryKey: ['outfit', id, userId] as const,
     queryFn: async () => {
       const response = await fetch(`${API_BASE_URL}/outfits/${id}`);
       if (!response.ok) throw new Error('Failed to fetch outfit');
@@ -147,9 +148,9 @@ export const useOutfit = (id: string) => {
 
 export const useCreateOutfit = () => {
   const queryClient = useQueryClient();
+  const userId = useUserId();
   return useMutation({
     mutationFn: async (outfitData: OutfitData) => {
-      const { id: userId } = await queryClient.fetchQuery(authQueryOptions);
       const response = await fetch(`${API_BASE_URL}/outfits`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -165,8 +166,8 @@ export const useCreateOutfit = () => {
       return OutfitSchema.parse(data);
     },
     onSuccess: (result) => {
-      queryClient.setQueryData(['outfit', result.id], result);
-      queryClient.invalidateQueries({ queryKey: ['outfits'] });
+      queryClient.setQueryData(['outfit', result.id, result.userId], result);
+      queryClient.invalidateQueries({ queryKey: ['outfits', result.userId] });
     },
   });
 };
@@ -185,8 +186,8 @@ export const useUpdateOutfit = () => {
       return OutfitSchema.parse(data);
     },
     onSuccess: (result) => {
-      queryClient.setQueryData(['outfit', result.id], result);
-      queryClient.invalidateQueries({ queryKey: ['outfits'] });
+      queryClient.setQueryData(['outfit', result.id, result.userId], result);
+      queryClient.invalidateQueries({ queryKey: ['outfits', result.userId] });
     },
   });
 };
@@ -201,8 +202,8 @@ export const useDeleteOutfit = () => {
       return OutfitSchema.parse(data);
     },
     onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ['outfit', result.id] });
-      queryClient.invalidateQueries({ queryKey: ['outfits'] });
+      queryClient.invalidateQueries({ queryKey: ['outfit', result.id, result.userId] });
+      queryClient.invalidateQueries({ queryKey: ['outfits', result.userId] });
     },
   });
 };

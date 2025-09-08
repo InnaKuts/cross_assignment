@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import uuid from 'react-native-uuid';
 
 export interface User {
@@ -42,44 +41,27 @@ export const useAuthStore = create<AuthStore>()(
   )
 );
 
-export const authQueryOptions = {
-  queryKey: ['auth'],
-  queryFn: async (): Promise<User> => {
-    const { user, setUser } = useAuthStore.getState();
-    if (user) {
-      return user;
-    }
+export const useUser = () => {
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
+  const initialized = useRef(false);
 
+  useEffect(() => {
+    if (initialized.current || user) {
+      return;
+    }
+    initialized.current = true;
     const newUser = {
       id: `user_${uuid.v4()}`,
-      isAnonymous: false,
+      isAnonymous: true,
       createdAt: new Date(),
     };
     setUser(newUser);
-    return newUser;
-  },
-  staleTime: Infinity,
-  gcTime: Infinity,
+  }, [user, setUser]);
+
+  return user;
 };
 
-export const useAuth = <T = User,>(select?: (user: User) => T) =>
-  useQuery({
-    ...authQueryOptions,
-    select,
-  });
+export const useResetUser = () => useAuthStore((state) => state.clearUser);
 
-export const useUserId = () => useAuth((user) => user.id);
-
-export const useResetAuth = () => {
-  const queryClient = useQueryClient();
-  const clearUser = useAuthStore((state) => state.clearUser);
-
-  return useCallback(() => {
-    clearUser();
-    queryClient.invalidateQueries({ queryKey: ['auth'] });
-    queryClient.invalidateQueries({ queryKey: ['clothes'] });
-    queryClient.invalidateQueries({ queryKey: ['cloth'] });
-    queryClient.invalidateQueries({ queryKey: ['outfits'] });
-    queryClient.invalidateQueries({ queryKey: ['outfit'] });
-  }, [clearUser, queryClient]);
-};
+export const useUserId = () => useAuthStore((state) => state.user?.id);
