@@ -1,6 +1,13 @@
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useCallback } from 'react';
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import { ds } from '~/constants';
 import { useThemeColors } from '~/contexts/ThemeContext';
 
@@ -10,8 +17,66 @@ type FabProps = {
 } & TouchableOpacityProps;
 
 export const Fab = forwardRef<View, FabProps>(
-  ({ icon = 'add', variant = 'primary', ...touchableProps }, ref) => {
+  ({ icon = 'add', variant = 'primary', onPress, ...touchableProps }, ref) => {
     const colors = useThemeColors();
+
+    // Animation values
+    const scale = useSharedValue(0);
+    const opacity = useSharedValue(0);
+    const pressScale = useSharedValue(1);
+
+    // Function to trigger entrance animation
+    const triggerEntranceAnimation = useCallback(() => {
+      scale.value = withSpring(1, {
+        damping: 15,
+        stiffness: 150,
+      });
+      opacity.value = withTiming(1, { duration: 300 });
+    }, [scale, opacity]);
+
+    // Entrance animation on mount
+    useEffect(() => {
+      triggerEntranceAnimation();
+    }, [triggerEntranceAnimation]);
+
+    // Trigger animation when screen becomes focused (tab switch)
+    useFocusEffect(() => {
+      // Reset animation values
+      scale.value = 0;
+      opacity.value = 0;
+      // Trigger entrance animation
+      triggerEntranceAnimation();
+    });
+
+    // Animated styles
+    const animatedStyle = useAnimatedStyle(() => {
+      return {
+        transform: [{ scale: scale.value * pressScale.value }],
+        opacity: opacity.value,
+      };
+    });
+
+    // Press handlers
+    const handlePressIn = () => {
+      pressScale.value = withSpring(0.95, {
+        damping: 15,
+        stiffness: 300,
+      });
+    };
+
+    const handlePressOut = () => {
+      pressScale.value = withSpring(1, {
+        damping: 15,
+        stiffness: 300,
+      });
+    };
+
+    const handlePress = (event: any) => {
+      if (onPress) {
+        onPress(event);
+      }
+    };
+
     const buttonStyle = [
       styles.button,
       styles[`${variant}Button`],
@@ -24,10 +89,20 @@ export const Fab = forwardRef<View, FabProps>(
       variant === 'primary' && { color: colors.primary.lightest },
       variant === 'secondary' && { color: colors.highlight.darkest },
     ];
+
     return (
-      <TouchableOpacity ref={ref} {...touchableProps} style={buttonStyle}>
-        <Ionicons name={icon} size={ds.size[8]} style={iconStyle} />
-      </TouchableOpacity>
+      <Animated.View style={animatedStyle}>
+        <TouchableOpacity
+          ref={ref}
+          {...touchableProps}
+          style={buttonStyle}
+          onPress={handlePress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          activeOpacity={1}>
+          <Ionicons name={icon} size={ds.size[8]} style={iconStyle} />
+        </TouchableOpacity>
+      </Animated.View>
     );
   }
 );
