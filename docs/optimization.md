@@ -110,8 +110,8 @@ export const CardsGrid = forwardRef<FlatList, CardsGridProps>(({ cards, columns 
 
 **Current Bundle Sizes:**
 
-- **iOS Bundle**: 2.53 MB
-- **Android Bundle**: 5.3MB
+- **iOS Bundle**: 6.6 MB
+- **Android Bundle**: 6.6MB
 
 **Largest Dependencies Identified:**
 
@@ -134,4 +134,4 @@ export const CardsGrid = forwardRef<FlatList, CardsGridProps>(({ cards, columns 
 ### Package Optimization Opportunity
 
 - **Selected Package: `react-native-uuid`**
-- **Icon Tree-shaking**: Import only used icon sets from @expo/vector-icons
+- **Icon & Fonts**: Removed unused icons and fonts

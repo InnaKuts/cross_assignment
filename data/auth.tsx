@@ -2,7 +2,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useEffect, useRef } from 'react';
-import uuid from 'react-native-uuid';
+
+const generateId = (): string => {
+  const timestamp = Date.now().toString(36);
+  const random = Math.random().toString(36).substring(2, 15);
+  return `${timestamp}_${random}`;
+};
 
 export interface User {
   id: string;
@@ -60,7 +65,7 @@ export const useUser = () => {
     }
     initialized.current = true;
     const newUser = {
-      id: `user_${uuid.v4()}`,
+      id: `user_${generateId()}`,
       name: 'Anonymous User',
       isAnonymous: true,
       createdAt: new Date(),
