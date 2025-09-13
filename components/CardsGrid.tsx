@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useCallback, useMemo } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { Card, ImageItemProps } from './Card';
 import { ds } from '~/constants';
@@ -19,28 +19,36 @@ type CardsGridProps = {
 
 export const CardsGrid = forwardRef<FlatList, CardsGridProps>(({ cards, columns }, ref) => {
   const { isTablet, isDesktop } = useDeviceKind();
-  const resolvedColumns = columns ?? (isTablet ? 4 : isDesktop ? 6 : 2);
 
-  const renderItem = ({ item }: { item: CardItem }) => (
-    <View style={[styles.cardWrapper, { flex: 1 / resolvedColumns }]}>
-      <Card
-        key={item.id}
-        image={item.image}
-        title={item.title}
-        buttonTitle={item.buttonTitle}
-        onButtonPress={item.onButtonPress}
-      />
-    </View>
+  // Memoize resolved columns calculation
+  const resolvedColumns = useMemo(() => {
+    return columns ?? (isTablet ? 4 : isDesktop ? 6 : 2);
+  }, [columns, isTablet, isDesktop]);
+
+  // Memoize renderItem function to prevent unnecessary re-renders
+  const renderItem = useCallback(
+    ({ item }: { item: CardItem }) => (
+      <View style={[styles.cardWrapper, { flex: 1 / resolvedColumns }]}>
+        <Card
+          image={item.image}
+          title={item.title}
+          buttonTitle={item.buttonTitle}
+          onButtonPress={item.onButtonPress}
+        />
+      </View>
+    ),
+    [resolvedColumns]
   );
+
+  const keyExtractor = useCallback((item: CardItem) => item.id, []);
 
   return (
     <View style={styles.container}>
       <FlatList
         ref={ref}
-        key={`grid-${resolvedColumns}`}
         data={cards}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={keyExtractor}
         numColumns={resolvedColumns}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}

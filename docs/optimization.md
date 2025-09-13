@@ -102,7 +102,7 @@ export const CardsGrid = forwardRef<FlatList, CardsGridProps>(({ cards, columns 
 1. **Memoize renderItem function** with useCallback
 2. **Memoize resolved columns** with useMemo
 3. **Optimize key prop** to prevent unnecessary re-renders
-4. **Consider React.memo** for Card components
+4. **React.memo** for Card components
 
 ## Task 3: Bundle Analysis
 

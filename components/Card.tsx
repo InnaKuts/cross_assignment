@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, memo } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { Button } from './Button';
 import { ds } from '~/constants';
@@ -18,8 +18,8 @@ type CardProps = {
   onButtonPress?: () => void;
 };
 
-export const Card = forwardRef<View, CardProps>(
-  ({ image, title, buttonTitle, onButtonPress }, ref) => {
+export const Card = memo(
+  forwardRef<View, CardProps>(({ image, title, buttonTitle, onButtonPress }, ref) => {
     const colors = useThemeColors();
     return (
       <View ref={ref} style={[styles.container, { backgroundColor: colors.highlight.lightest }]}>
@@ -38,7 +38,7 @@ export const Card = forwardRef<View, CardProps>(
         </View>
       </View>
     );
-  }
+  })
 );
 
 Card.displayName = 'Card';
