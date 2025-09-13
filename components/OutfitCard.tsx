@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Icon, Icons } from './Icon';
 import { ds } from '~/constants';
 import { CardItem } from './CardsGrid';
 import { Card } from './Card';
@@ -34,7 +34,7 @@ export const OutfitCard = forwardRef<View, OutfitCardProps>(({ title, onEdit, ca
           <Card key={card.id} {...card} />
         ))}
         <TouchableOpacity style={styles.addCardButton} onPress={onEdit}>
-          <Ionicons name="add-outline" size={20} color={ds.colors.highlight.darkest} />
+          <Icon name={Icons.addOutline} size={20} color={ds.colors.highlight.darkest} />
         </TouchableOpacity>
       </ScrollView>
     </View>

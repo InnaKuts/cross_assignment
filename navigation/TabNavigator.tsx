@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
+import { Icon, Icons } from '../components/Icon';
 
 // Import screens
 import Wardrobe from '../screens/WardrobeScreen';
@@ -28,7 +28,7 @@ const Tab = createBottomTabNavigator({
         title: 'Wardrobe',
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
-          <Ionicons name="shirt-outline" size={size} color={color} />
+          <Icon name={Icons.shirtOutline} size={size} color={color} />
         ),
       },
     },
@@ -38,7 +38,7 @@ const Tab = createBottomTabNavigator({
         title: 'Outfits',
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
-          <Ionicons name="people-outline" size={size} color={color} />
+          <Icon name={Icons.peopleOutline} size={size} color={color} />
         ),
       },
     },
@@ -48,7 +48,7 @@ const Tab = createBottomTabNavigator({
         title: 'Settings',
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
-          <Ionicons name="settings-outline" size={size} color={color} />
+          <Icon name={Icons.settingsOutline} size={size} color={color} />
         ),
       },
     },

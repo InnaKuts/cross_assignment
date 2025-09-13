@@ -2,7 +2,7 @@ import { forwardRef, memo } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { Button } from './Button';
 import { ds } from '~/constants';
-import { Ionicons } from '@expo/vector-icons';
+import { Icon, Icons } from './Icon';
 import { useThemeColors } from '~/contexts/ThemeContext';
 
 export type ImageItemProps = {
@@ -27,7 +27,7 @@ export const Card = memo(
           {image ? (
             <Image source={image} style={styles.image} />
           ) : (
-            <Ionicons name="image" size={24} color={colors.highlight.darkest} />
+            <Icon name={Icons.image} size={24} color={colors.highlight.darkest} />
           )}
         </View>
         <View style={styles.content}>

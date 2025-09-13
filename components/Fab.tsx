@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useCallback } from 'react';
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Icon, IconName } from './Icon';
 import { useFocusEffect } from '@react-navigation/native';
 import Animated, {
   useSharedValue,
@@ -12,12 +12,12 @@ import { ds } from '~/constants';
 import { useThemeColors } from '~/contexts/ThemeContext';
 
 type FabProps = {
-  icon?: React.ComponentProps<typeof Ionicons>['name'];
+  icon?: IconName;
   variant?: 'primary' | 'secondary';
 } & TouchableOpacityProps;
 
 export const Fab = forwardRef<View, FabProps>(
-  ({ icon = 'add', variant = 'primary', onPress, ...touchableProps }, ref) => {
+  ({ icon = 'add-outline', variant = 'primary', onPress, ...touchableProps }, ref) => {
     const colors = useThemeColors();
 
     // Animation values
@@ -100,7 +100,7 @@ export const Fab = forwardRef<View, FabProps>(
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
           activeOpacity={1}>
-          <Ionicons name={icon} size={ds.size[8]} style={iconStyle} />
+          <Icon name={icon} size={ds.size[8]} style={iconStyle} />
         </TouchableOpacity>
       </Animated.View>
     );

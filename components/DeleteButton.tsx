@@ -1,7 +1,6 @@
 import React from 'react';
 import { Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { ds } from '~/constants';
+import { Icon, Icons } from './Icon';
 import { useThemeColors } from '~/contexts/ThemeContext';
 
 interface DeleteButtonProps {
@@ -39,8 +38,8 @@ export function DeleteButton({
   };
 
   return (
-    <Ionicons
-      name="trash-outline"
+    <Icon
+      name={Icons.trashOutline}
       size={size}
       color={iconColor}
       style={style}

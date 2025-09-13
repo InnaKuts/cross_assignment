@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Icon, Icons } from './Icon';
 import { ds } from '~/constants';
 import { Button } from './Button';
 import { useThemeColors } from '~/contexts/ThemeContext';
@@ -8,7 +8,7 @@ export function ErrorView({ onRetry }: { onRetry?: () => void }) {
   const colors = useThemeColors();
   return (
     <View style={styles.container}>
-      <Ionicons name="alert-circle" size={48} color={colors.error.dark} style={styles.icon} />
+      <Icon name={Icons.alertCircle} size={48} color={colors.error.dark} style={styles.icon} />
       <Text style={[styles.text, { color: colors.error.dark }]}>Something went wrong</Text>
       {onRetry && <Button title="Try again" variant="secondary" onPress={onRetry} />}
     </View>

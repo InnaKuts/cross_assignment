@@ -23,7 +23,7 @@ import {
 } from '~/components';
 import { useCloth, useCreateCloth, useUpdateCloth, useDeleteCloth } from '~/data/api';
 import { Slot, Cloth } from '~/data/models';
-import { Ionicons } from '@expo/vector-icons';
+import { Icon, Icons } from '~/components/Icon';
 import { SCREENS } from '~/navigation/screens';
 import { useThemeColors } from '~/contexts/ThemeContext';
 
@@ -227,7 +227,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
             <Image source={image} style={styles.image} />
           ) : (
             <View style={styles.imagePlaceholder}>
-              <Ionicons name="camera" size={24} color={colors.highlight.darkest} />
+              <Icon name={Icons.camera} size={24} color={colors.highlight.darkest} />
             </View>
           )}
         </TouchableOpacity>
