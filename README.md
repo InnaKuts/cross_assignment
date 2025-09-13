@@ -52,6 +52,7 @@ A React Native project showcasing various UI components built with Expo and Type
 - **[Navigation Documentation](docs/navigation.md)** - Cross Assignment 4
 - **[Api Documentation](docs/api.md)** - Cross Assignment 5
 - **[State Management Documentation](docs/state.md)** - Cross Assignment 6
+- **[Optimization](docs/optimization.md)** - Cross Assignment 7
 
 ## 🛠️ Tech Stack
 

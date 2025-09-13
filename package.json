@@ -7,10 +7,13 @@
     "start": "expo start",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\" && prettier -c \"**/*.{js,jsx,ts,tsx,json}\"",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
-    "web": "expo start --web"
+    "atlas": "npx expo-atlas .expo/atlas.jsonl",
+    "atlas:android": "EXPO_ATLAS=true npx expo export --platform android --source-maps && npx expo-atlas .expo/atlas.jsonl",
+    "atlas:ios": "EXPO_ATLAS=true npx expo export --platform ios --source-maps && npx expo-atlas .expo/atlas.jsonl"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.1",
+    "@expo/metro-runtime": "~5.0.4",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-navigation/bottom-tabs": "^7.4.6",
@@ -22,11 +25,13 @@
     "expo-splash-screen": "^0.30.10",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-native": "0.79.5",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
     "react-native-uuid": "^2.0.3",
+    "react-native-web": "^0.20.0",
     "zod": "^4.1.5",
     "zustand": "^5.0.8"
   },
@@ -36,6 +41,7 @@
     "eslint": "^9.25.1",
     "eslint-config-expo": "^9.2.0",
     "eslint-config-prettier": "^10.1.2",
+    "expo-atlas": "^0.4.3",
     "prettier": "^3.2.5",
     "typescript": "~5.8.3"
   },
