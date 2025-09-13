@@ -54,6 +54,8 @@ After analyzing the application, several components would benefit from animation
 - Automatic layout animations
 - Simpler setup for basic transitions
 
+![Animation](assets/animation.mp4)
+
 ## Task 2: Re-render Optimization
 
 ### Components with Potential Re-render Issues
@@ -106,24 +108,24 @@ export const CardsGrid = forwardRef<FlatList, CardsGridProps>(({ cards, columns 
 
 ## Task 3: Bundle Analysis
 
-### Bundle Size Analysis
+### Bundle Size Analysis (Atlas)
 
-**Current Bundle Sizes:**
+**Before optimization**: 6.6 MB
+![Before Optimization](assets/before_optim.png)
 
-- **iOS Bundle**: 6.6 MB
-- **Android Bundle**: 6.6MB
+**After optimization**: 6.1 MB
+![After Optimization](assets/after_optim.png)
 
 **Largest Dependencies Identified:**
 
-1. **Font Assets (~3.5MB total)**
+1. **Font Assets**
    - `@expo-google-fonts/inter` - Inter font family with multiple weights
    - Includes: Regular, SemiBold, Bold, ExtraBold variants
-   - Each font file: ~340-350KB
 
-2. **Vector Icons (~2.5MB total)**
+2. **Vector Icons**
    - `@expo/vector-icons` - Multiple icon sets loaded
    - Includes: Ionicons, MaterialIcons, FontAwesome, etc.
-   - Largest: MaterialCommunityIcons (1.15MB), Ionicons (443KB)
+   - Largest: MaterialCommunityIcons, Ionicons
 
 3. **Core Dependencies**
    - `@tanstack/react-query` - Data fetching library
