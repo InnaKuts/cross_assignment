@@ -1,4 +1,4 @@
-# Cross Assignment 6 - Performance Optimization Analysis
+# Performance Optimization Analysis
 
 ## Overview
 
