@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Cloth from '../screens/ClothScreen';
 import Outfit from '../screens/OutfitScreen';
 import Overview from '../screens/OverviewScreen';
+import SelectCloth from '../screens/SelectClothScreen';
 
 // Import Tab Navigator
 import Tab from './TabNavigator';
@@ -52,6 +53,14 @@ const Stack = createStackNavigator({
       options: {
         title: 'Overview',
         headerShown: true,
+      },
+    },
+    [SCREENS.SELECT_CLOTH]: {
+      screen: SelectCloth,
+      options: {
+        title: 'Select Cloth',
+        headerShown: true,
+        presentation: 'modal',
       },
     },
   },

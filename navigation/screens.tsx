@@ -14,4 +14,5 @@ export const SCREENS = {
   CLOTH: 'Cloth',
   OUTFIT: 'Outfit',
   OVERVIEW: 'Overview',
+  SELECT_CLOTH: 'SelectCloth',
 } as const;

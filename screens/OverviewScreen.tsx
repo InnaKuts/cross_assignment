@@ -4,6 +4,8 @@ import { ds } from '~/constants';
 import { Button, CardsGrid, CardsRow, Fab, Icons, Tags, TextField } from '~/components';
 import { requireImage } from '~/components/helpers/requireImage';
 import { useThemeColors } from '~/contexts/ThemeContext';
+import { SCREENS } from '~/navigation/screens';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Overview() {
   const colors = useThemeColors();
@@ -52,6 +54,7 @@ const BottomSectionContent = () => {
 };
 
 const TopSectionContent = ({ colors }: { colors: ReturnType<typeof useThemeColors> }) => {
+  const navigation = useNavigation();
   return (
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
       <Text style={[ds.font.heading.h1, { color: colors.secondary.darkest }]}>Overview</Text>
@@ -68,6 +71,12 @@ const TopSectionContent = ({ colors }: { colors: ReturnType<typeof useThemeColor
           { id: '3', text: 'Tag 3' },
         ]}
         onSelectionChange={() => {}}
+      />
+      <Button
+        title="Select Cloth"
+        onPress={() => {
+          navigation.navigate(SCREENS.SELECT_CLOTH, { returnToScreen: SCREENS.OVERVIEW });
+        }}
       />
       <TextField label="TextField" placeholder="TextField" onPress={() => {}} />
       <CardsRow

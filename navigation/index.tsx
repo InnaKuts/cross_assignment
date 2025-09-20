@@ -3,6 +3,7 @@ import { createStaticNavigation, StaticParamList } from '@react-navigation/nativ
 // Import navigators
 import Stack from './StackNavigator';
 import { SCREENS } from './screens';
+import { Slot } from '~/data/models';
 
 /**
  * Root Navigation Configuration
@@ -27,6 +28,7 @@ declare global {
     interface RootParamList extends StaticParamList<typeof Stack> {
       [SCREENS.CLOTH]: { clothId: string | null };
       [SCREENS.OUTFIT]: { outfitId: string | null };
+      [SCREENS.SELECT_CLOTH]: { slot?: Slot; returnToScreen: string };
       [key: string]: object | undefined;
     }
   }
