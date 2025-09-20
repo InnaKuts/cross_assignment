@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ds } from '~/constants';
-import { Button, CardsGrid, CardsRow, Fab, Tags, TextField } from '~/components';
+import { Button, CardsGrid, CardsRow, Fab, Icons, Tags, TextField } from '~/components';
 import { requireImage } from '~/components/helpers/requireImage';
 import { useThemeColors } from '~/contexts/ThemeContext';
 
@@ -99,6 +99,11 @@ const TopSectionContent = ({ colors }: { colors: ReturnType<typeof useThemeColor
             image: requireImage('~/assets/images/card-image.jpg'),
             title: 'Row Card 5',
             buttonTitle: 'Action',
+          },
+          {
+            id: 'addButton',
+            icon: Icons.addOutline,
+            onButtonPress: () => {},
           },
         ]}
       />

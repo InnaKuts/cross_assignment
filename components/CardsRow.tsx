@@ -1,12 +1,21 @@
 import { forwardRef, useCallback, useMemo } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card } from './Card';
 import { ds } from '~/constants';
 import { CardItem } from './CardsGrid';
 import { useDeviceKind } from './helpers/useDeviceKind';
+import { Icon, IconName } from './Icon';
+
+type ActionItem = {
+  id: string;
+  icon: IconName;
+  onButtonPress: () => void;
+};
+
+type RowItem = CardItem | ActionItem;
 
 type CardsRowProps = {
-  cards: CardItem[];
+  cards: RowItem[];
   cardWidth?: number;
 };
 
@@ -19,20 +28,29 @@ export const CardsRow = forwardRef<FlatList, CardsRowProps>(({ cards, cardWidth 
 
   // Memoize renderItem function to prevent unnecessary re-renders
   const renderItem = useCallback(
-    ({ item }: { item: CardItem }) => (
+    ({ item }: { item: RowItem }) => (
       <View style={[styles.cardWrapper, { width: resolvedCardWidth }]}>
-        <Card
-          image={item.image}
-          title={item.title}
-          buttonTitle={item.buttonTitle}
-          onButtonPress={item.onButtonPress}
-        />
+        {'image' in item && (
+          <Card
+            image={item.image}
+            title={item.title}
+            buttonTitle={item.buttonTitle}
+            onButtonPress={item.onButtonPress}
+          />
+        )}
+        {'icon' in item && (
+          <TouchableOpacity
+            style={[styles.addCardButton, cards.length === 1 && { height: resolvedCardWidth }]}
+            onPress={item.onButtonPress}>
+            <Icon name={item.icon} size={20} color={ds.colors.highlight.darkest} />
+          </TouchableOpacity>
+        )}
       </View>
     ),
-    [resolvedCardWidth]
+    [resolvedCardWidth, cards]
   );
 
-  const keyExtractor = useCallback((item: CardItem) => item.id, []);
+  const keyExtractor = useCallback((item: RowItem) => item.id, []);
 
   return (
     <FlatList
@@ -43,6 +61,7 @@ export const CardsRow = forwardRef<FlatList, CardsRowProps>(({ cards, cardWidth 
       horizontal={true}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.contentContainer}
       style={styles.container}
     />
   );
@@ -54,8 +73,18 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
+  contentContainer: {
+    gap: ds.spacing.xs,
+  },
   cardWrapper: {
-    paddingHorizontal: ds.spacing.xs,
     paddingVertical: ds.spacing.xs,
+  },
+  addCardButton: {
+    height: '100%',
+    padding: ds.spacing.xs,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: ds.borderRadius.md,
+    backgroundColor: ds.colors.highlight.lightest,
   },
 });

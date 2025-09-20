@@ -1,9 +1,9 @@
-import { forwardRef } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Icon, Icons } from './Icon';
+import { forwardRef, useMemo } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Icons } from './Icon';
 import { ds } from '~/constants';
 import { CardItem } from './CardsGrid';
-import { Card } from './Card';
+import { CardsRow } from './CardsRow';
 
 type OutfitCardProps = {
   title: string;
@@ -12,6 +12,19 @@ type OutfitCardProps = {
 };
 
 export const OutfitCard = forwardRef<View, OutfitCardProps>(({ title, onEdit, cards }, ref) => {
+  const resolvedCards = useMemo(() => {
+    return onEdit
+      ? [
+          ...cards,
+          {
+            id: 'addButton',
+            icon: Icons.addOutline,
+            onButtonPress: onEdit,
+          },
+        ]
+      : cards;
+  }, [cards, onEdit]);
+
   return (
     <View ref={ref} style={styles.container}>
       {/* HeaderRow with space between */}
@@ -24,19 +37,7 @@ export const OutfitCard = forwardRef<View, OutfitCardProps>(({ title, onEdit, ca
         )}
       </View>
 
-      {/* Horizontal Scroll for clothes cards */}
-      <ScrollView
-        style={styles.scrollContainer}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        nestedScrollEnabled={true}>
-        {cards.map((card) => (
-          <Card key={card.id} {...card} />
-        ))}
-        <TouchableOpacity style={styles.addCardButton} onPress={onEdit}>
-          <Icon name={Icons.addOutline} size={20} color={ds.colors.highlight.darkest} />
-        </TouchableOpacity>
-      </ScrollView>
+      <CardsRow cards={resolvedCards} />
     </View>
   );
 });
