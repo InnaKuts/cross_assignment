@@ -5,6 +5,7 @@ export * from './Tags';
 export * from './TextField';
 export * from './Card';
 export * from './CardsGrid';
+export * from './CardsRow';
 export * from './EmptyView';
 export * from './LoadingView';
 export * from './ErrorView';
