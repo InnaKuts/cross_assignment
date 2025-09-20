@@ -6,15 +6,15 @@ import { CardItem } from './CardsGrid';
 import { useDeviceKind } from './helpers/useDeviceKind';
 import { Icon, IconName } from './Icon';
 
-type ActionItem = {
+export type ActionItem = {
   id: string;
   icon: IconName;
   onButtonPress: () => void;
 };
 
-type RowItem = CardItem | ActionItem;
+export type RowItem = CardItem | ActionItem;
 
-type CardsRowProps = {
+export type CardsRowProps = {
   cards: RowItem[];
   cardWidth?: number;
 };

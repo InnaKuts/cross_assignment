@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
-import { CardsGrid, Fab, LoadingView, EmptyView, ErrorView } from '~/components';
+import { CardsGrid, Fab, LoadingView, EmptyView, ErrorView, Icons } from '~/components';
 import { ds } from '~/constants';
 import { useClothes } from '~/data/api';
 import { SCREENS } from '~/navigation/screens';
@@ -18,7 +18,7 @@ export default function Wardrobe() {
       </View>
       <View style={styles.fabContainer}>
         <Fab
-          icon="add-outline"
+          icon={Icons.addOutline}
           onPress={() => {
             navigation.navigate(SCREENS.CLOTH, { clothId: null });
           }}

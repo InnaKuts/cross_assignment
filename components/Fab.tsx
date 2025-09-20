@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useCallback } from 'react';
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
-import { Icon, IconName } from './Icon';
+import { Icon, IconName, Icons } from './Icon';
 import { useFocusEffect } from '@react-navigation/native';
 import Animated, {
   useSharedValue,
@@ -17,7 +17,7 @@ type FabProps = {
 } & TouchableOpacityProps;
 
 export const Fab = forwardRef<View, FabProps>(
-  ({ icon = 'add-outline', variant = 'primary', onPress, ...touchableProps }, ref) => {
+  ({ icon = Icons.addOutline, variant = 'primary', onPress, ...touchableProps }, ref) => {
     const colors = useThemeColors();
 
     // Animation values

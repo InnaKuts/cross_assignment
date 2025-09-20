@@ -58,8 +58,8 @@ const TopSectionContent = ({ colors }: { colors: ReturnType<typeof useThemeColor
       <Button title="Primary Button" onPress={() => {}} />
       <Button title="Secondary Button" variant="secondary" onPress={() => {}} />
       <View style={styles.fabContainer}>
-        <Fab icon="add-outline" onPress={() => {}} />
-        <Fab icon="add-outline" variant="secondary" onPress={() => {}} />
+        <Fab icon={Icons.addOutline} onPress={() => {}} />
+        <Fab icon={Icons.addOutline} variant="secondary" onPress={() => {}} />
       </View>
       <Tags
         tags={[

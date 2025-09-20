@@ -1,4 +1,4 @@
-import { SafeAreaView, View, StyleSheet } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text, ScrollView } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { ds } from '~/constants';
 import { useCreateOutfit, useDeleteOutfit, useOutfit, useUpdateOutfit } from '~/data/api';
@@ -10,9 +10,12 @@ import {
   TextField,
   DeleteButton,
   showErrorAlert,
+  CardsRow,
+  RowItem,
+  Icons,
 } from '~/components';
-import { Outfit } from '~/data/models';
-import { useState, useLayoutEffect } from 'react';
+import { Cloth, Outfit, Slot, SlotSchema } from '~/data/models';
+import { useState, useLayoutEffect, useMemo } from 'react';
 import { SCREENS } from '~/navigation/screens';
 import { useThemeColors } from '~/contexts/ThemeContext';
 
@@ -65,6 +68,46 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
   const navigation = useNavigation();
   const [title, setTitle] = useState(outfit?.name || '');
 
+  const [clothBySlots, setClothBySlots] = useState<Record<Slot, Cloth[]>>(() => {
+    const grouped = Object.fromEntries(
+      SlotSchema.options.map((slot) => [slot, []]) as [Slot, Cloth[]][]
+    ) as Record<Slot, Cloth[]>;
+    for (const cloth of outfit?.clothes || []) {
+      grouped[cloth.slot].push(cloth);
+    }
+    return grouped;
+  });
+
+  const cardsBySlots = useMemo(() => {
+    return Object.fromEntries(
+      (Object.entries(clothBySlots) as [Slot, Cloth[]][]).map(([slot, clothes]) => [
+        slot,
+        clothes
+          .map(
+            (cloth) =>
+              ({
+                id: cloth.id,
+                image: cloth.photo.source,
+                title: cloth.name,
+                buttonTitle: 'Remove',
+                onButtonPress: () => {
+                  setClothBySlots((prev) => {
+                    const newSlots = { ...prev };
+                    newSlots[slot] = newSlots[slot].filter((c) => c.id !== cloth.id);
+                    return newSlots;
+                  });
+                },
+              }) as RowItem
+          )
+          .concat({
+            id: 'addButton',
+            icon: Icons.addOutline,
+            onButtonPress: () => {},
+          } as RowItem),
+      ])
+    ) as Record<Slot, RowItem[]>;
+  }, [clothBySlots]);
+
   const isPending =
     createOutfitMutation.isPending ||
     updateOutfitMutation.isPending ||
@@ -96,12 +139,20 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
 
   return (
     <View style={styles.container}>
-      <TextField
-        value={title}
-        label="Outfit Name"
-        onChangeText={setTitle}
-        placeholder="Outfit Name"
-      />
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}>
+        <TextField
+          value={title}
+          label="Outfit Name"
+          onChangeText={setTitle}
+          placeholder="Outfit Name"
+        />
+        {(Object.entries(cardsBySlots) as [Slot, RowItem[]][]).map(([slot, cards]) => (
+          <SlotRow key={slot} slot={slot} cards={cards} />
+        ))}
+      </ScrollView>
       <View style={styles.buttonContainer}>
         <Button
           title={isPending ? 'Saving...' : 'Save'}
@@ -139,6 +190,16 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
   );
 }
 
+const SlotRow = ({ slot, cards }: { slot: Slot; cards: RowItem[] }) => {
+  const colors = useThemeColors();
+  return (
+    <View style={styles.slotRow}>
+      <Text style={[ds.font.action.md, { color: colors.secondary.darkest }]}>{slot}</Text>
+      <CardsRow cards={cards} />
+    </View>
+  );
+};
+
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -150,6 +211,12 @@ export const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 'auto',
-    paddingTop: ds.spacing.lg,
+  },
+  slotRow: {},
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    gap: ds.spacing.md,
   },
 });
