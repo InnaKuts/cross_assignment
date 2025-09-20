@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Cloth, Outfit, ClothSchema, OutfitSchema } from './models';
+import { Cloth, Outfit, ClothSchema, OutfitSchema, Slot } from './models';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useUserId } from './auth';
 
@@ -27,13 +27,21 @@ const safeParseArray = <T, S extends z.ZodType<T>>(data: unknown, schema: S): T[
   return parsedItems;
 };
 
-export const useClothes = <T = Cloth[],>({ select }: { select?: (clothes: Cloth[]) => T }) => {
+export const useClothes = <T = Cloth[],>({
+  select,
+  slot,
+}: {
+  select?: (clothes: Cloth[]) => T;
+  slot?: Slot;
+}) => {
   const userId = useUserId();
 
   return useQuery({
-    queryKey: ['clothes', userId] as const,
+    queryKey: ['clothes', userId, slot] as const,
     queryFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/clothes?userId=${userId}`);
+      const response = await fetch(
+        `${API_BASE_URL}/clothes?userId=${userId}${slot ? `&slot=${slot}` : ''}`
+      );
       if (response.status === 404) return [];
       if (!response.ok) throw new Error('Failed to fetch clothes');
       const data = await response.json();
