@@ -20,7 +20,7 @@ export type CardsRowProps = {
 };
 
 export const CardsRow = forwardRef<FlatList, CardsRowProps>(({ cards, cardWidth = null }, ref) => {
-  const { isTablet, isDesktop } = useDeviceKind();
+  const { deviceKind, isTablet, isDesktop } = useDeviceKind();
 
   const resolvedCardWidth = useMemo(() => {
     return cardWidth ?? (isTablet ? 200 : isDesktop ? 300 : 170);
@@ -40,7 +40,7 @@ export const CardsRow = forwardRef<FlatList, CardsRowProps>(({ cards, cardWidth 
         )}
         {'icon' in item && (
           <TouchableOpacity
-            style={[styles.addCardButton, cards.length === 1 && { height: resolvedCardWidth }]}
+            style={[styles.addCardButton, cards.length === 1 && { height: 50 }]}
             onPress={item.onButtonPress}>
             <Icon name={item.icon} size={20} color={ds.colors.highlight.darkest} />
           </TouchableOpacity>
@@ -51,6 +51,10 @@ export const CardsRow = forwardRef<FlatList, CardsRowProps>(({ cards, cardWidth 
   );
 
   const keyExtractor = useCallback((item: RowItem) => item.id, []);
+
+  if (!deviceKind) {
+    return <View />;
+  }
 
   return (
     <FlatList

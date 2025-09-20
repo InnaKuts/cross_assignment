@@ -5,7 +5,7 @@ import { ds } from '~/constants';
 export type DeviceKind = 'phone' | 'tablet' | 'desktop';
 
 export const useDeviceKind = () => {
-  const [deviceKind, setDeviceKind] = useState<DeviceKind>('phone');
+  const [deviceKind, setDeviceKind] = useState<DeviceKind | null>(null);
 
   useEffect(() => {
     const checkDeviceKind = () => {

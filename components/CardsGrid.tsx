@@ -18,7 +18,7 @@ type CardsGridProps = {
 };
 
 export const CardsGrid = forwardRef<FlatList, CardsGridProps>(({ cards, columns }, ref) => {
-  const { isTablet, isDesktop } = useDeviceKind();
+  const { deviceKind, isTablet, isDesktop } = useDeviceKind();
 
   // Memoize resolved columns calculation
   const resolvedColumns = useMemo(() => {
@@ -41,6 +41,10 @@ export const CardsGrid = forwardRef<FlatList, CardsGridProps>(({ cards, columns 
   );
 
   const keyExtractor = useCallback((item: CardItem) => item.id, []);
+
+  if (!deviceKind) {
+    return <View />;
+  }
 
   return (
     <View style={styles.container}>
