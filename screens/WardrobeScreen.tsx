@@ -18,7 +18,7 @@ export default function Wardrobe() {
       </View>
       <View style={styles.fabContainer}>
         <Fab
-          icon="add"
+          icon="add-outline"
           onPress={() => {
             navigation.navigate(SCREENS.CLOTH, { clothId: null });
           }}

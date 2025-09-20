@@ -11,9 +11,9 @@ export const ImageSchema = z.object({
 export type Image = z.infer<typeof ImageSchema>;
 
 export const ClothSchema = z.object({
-  id: z.string(),
-  userId: z.string(),
-  name: z.string(),
+  id: z.string().nonempty(),
+  userId: z.string().nonempty(),
+  name: z.string().nonempty(),
   slot: SlotSchema,
   photo: z.object({
     source: ImageSchema.nullable(),
@@ -24,9 +24,9 @@ export const ClothSchema = z.object({
 export type Cloth = z.infer<typeof ClothSchema>;
 
 export const OutfitSchema = z.object({
-  id: z.string(),
-  userId: z.string(),
-  name: z.string(),
+  id: z.string().nonempty(),
+  userId: z.string().nonempty(),
+  name: z.string().nonempty(),
   clothes: z.array(ClothSchema),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),

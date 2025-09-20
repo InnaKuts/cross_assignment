@@ -62,15 +62,17 @@ export const useCreateCloth = () => {
 
   return useMutation({
     mutationFn: async (clothData: ClothData) => {
+      const body = {
+        userId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        ...clothData,
+      };
+      ClothSchema.omit({ id: true }).parse(body);
       const response = await fetch(`${API_BASE_URL}/clothes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          ...clothData,
-        }),
+        body: JSON.stringify(body),
       });
       if (!response.ok) throw new Error('Failed to create cloth');
       const data = await response.json();
@@ -85,15 +87,20 @@ export const useCreateCloth = () => {
 
 export const useUpdateCloth = () => {
   const queryClient = useQueryClient();
+  const userId = useUserId();
   return useMutation({
     mutationFn: async ({ id, ...clothData }: Partial<ClothData> & IdData) => {
+      const body = {
+        ...clothData,
+        id,
+        userId,
+        updatedAt: new Date().toISOString(),
+      };
+      ClothSchema.partial({ name: true, slot: true, photo: true, createdAt: true }).parse(body);
       const response = await fetch(`${API_BASE_URL}/clothes/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...clothData,
-          updatedAt: new Date(),
-        }),
+        body: JSON.stringify(body),
       });
       if (!response.ok) throw new Error('Failed to update cloth');
       const data = await response.json();
@@ -155,15 +162,17 @@ export const useCreateOutfit = () => {
   const userId = useUserId();
   return useMutation({
     mutationFn: async (outfitData: OutfitData) => {
+      const body = {
+        userId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        ...outfitData,
+      };
+      OutfitSchema.omit({ id: true }).parse(body);
       const response = await fetch(`${API_BASE_URL}/outfits`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          ...outfitData,
-        }),
+        body: JSON.stringify(body),
       });
       if (!response.ok) throw new Error('Failed to create outfit');
       const data = await response.json();
@@ -178,15 +187,20 @@ export const useCreateOutfit = () => {
 
 export const useUpdateOutfit = () => {
   const queryClient = useQueryClient();
+  const userId = useUserId();
   return useMutation({
     mutationFn: async ({ id, ...outfitData }: Partial<OutfitData> & IdData) => {
+      const body = {
+        ...outfitData,
+        id,
+        userId,
+        updatedAt: new Date().toISOString(),
+      };
+      OutfitSchema.partial({ name: true, clothes: true, createdAt: true }).parse(body);
       const response = await fetch(`${API_BASE_URL}/outfits/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...outfitData,
-          updatedAt: new Date(),
-        }),
+        body: JSON.stringify(body),
       });
       if (!response.ok) throw new Error('Failed to update outfit');
       const data = await response.json();

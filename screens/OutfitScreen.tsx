@@ -1,8 +1,16 @@
-import { SafeAreaView, View, StyleSheet, Alert } from 'react-native';
+import { SafeAreaView, View, StyleSheet } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { ds } from '~/constants';
 import { useCreateOutfit, useDeleteOutfit, useOutfit, useUpdateOutfit } from '~/data/api';
-import { Button, EmptyView, ErrorView, LoadingView, TextField, DeleteButton } from '~/components';
+import {
+  Button,
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  TextField,
+  DeleteButton,
+  showErrorAlert,
+} from '~/components';
 import { Outfit } from '~/data/models';
 import { useState, useLayoutEffect } from 'react';
 import { SCREENS } from '~/navigation/screens';
@@ -74,7 +82,7 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
                     navigation.goBack();
                   },
                   onError: (error) => {
-                    Alert.alert('Error', error.message);
+                    showErrorAlert(error);
                   },
                 });
               }}
@@ -106,7 +114,7 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
                     navigation.goBack();
                   },
                   onError: (error) => {
-                    Alert.alert('Error', error.message);
+                    showErrorAlert(error);
                   },
                 }
               );
@@ -118,7 +126,7 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
                     navigation.goBack();
                   },
                   onError: (error) => {
-                    Alert.alert('Error', error.message);
+                    showErrorAlert(error);
                   },
                 }
               );

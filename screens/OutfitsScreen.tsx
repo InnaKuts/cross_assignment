@@ -18,7 +18,7 @@ export default function Outfits() {
       </View>
       <View style={styles.fabContainer}>
         <Fab
-          icon="add"
+          icon="add-outline"
           onPress={() => {
             navigation.navigate(SCREENS.OUTFIT, { outfitId: null });
           }}

@@ -20,6 +20,7 @@ import {
   ErrorView,
   EmptyView,
   DeleteButton,
+  showErrorAlert,
 } from '~/components';
 import { useCloth, useCreateCloth, useUpdateCloth, useDeleteCloth } from '~/data/api';
 import { Slot, Cloth } from '~/data/models';
@@ -169,7 +170,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
                     navigation.goBack();
                   },
                   onError: (error) => {
-                    Alert.alert('Error', error.message);
+                    showErrorAlert(error);
                   },
                 });
               }}
@@ -195,7 +196,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
             navigation.goBack();
           },
           onError: (error) => {
-            Alert.alert('Error', error.message);
+            showErrorAlert(error);
           },
         }
       );
@@ -211,7 +212,7 @@ function ClothView({ cloth }: { cloth: Cloth | null }) {
             navigation.goBack();
           },
           onError: (error) => {
-            Alert.alert('Error', error.message);
+            showErrorAlert(error);
           },
         }
       );
