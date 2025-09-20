@@ -44,3 +44,13 @@ navigation.navigate({ name: returnToScreen, params: { selectedCloth: item }, mer
 - Outfit creation; clear per-slot selection.
 - Predictable param passing with modal flow.
 - Cleaner, reusable components; strict typing.
+
+## 📱 Screenshots
+
+| Screen        | Phone                                                       | Tablet                                                        |
+| ------------- | ----------------------------------------------------------- | ------------------------------------------------------------- |
+| Wardrobe      | ![Wardrobe Phone](assets/phone/screen_wardrobe.jpg)         | ![Wardrobe Tablet](assets/tablet/screen_wardrobe.jpg)         |
+| Outfits       | ![Outfits Phone](assets/phone/screen_outfits.jpg)           | ![Outfits Tablet](assets/tablet/screen_outfits.jpg)           |
+| Cloth Details | ![Cloth Phone](assets/phone/screen_cloth.jpg)               | ![Cloth Tablet](assets/tablet/screen_cloth.jpg)               |
+| Outfit Editor | ![Outfit Phone](assets/phone/screen_outfit.jpg)             | ![Outfit Tablet](assets/tablet/screen_outfit.jpg)             |
+| Select Cloth  | ![Select Cloth Phone](assets/phone/screen_select_cloth.jpg) | ![Select Cloth Tablet](assets/tablet/screen_select_cloth.jpg) |
