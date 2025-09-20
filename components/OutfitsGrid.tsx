@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContainer: {
-    paddingHorizontal: ds.spacing.md,
     paddingVertical: ds.spacing.sm,
     gap: ds.spacing.md,
   },

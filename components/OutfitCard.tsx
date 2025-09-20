@@ -62,16 +62,4 @@ const styles = StyleSheet.create({
   editButton: {
     padding: ds.spacing.xs,
   },
-  scrollContainer: {
-    height: 100,
-  },
-  addCardButton: {
-    padding: ds.spacing.xs,
-    width: 100,
-    aspectRatio: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: ds.borderRadius.md,
-    backgroundColor: ds.colors.highlight.lightest,
-  },
 });

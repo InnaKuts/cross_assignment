@@ -1,5 +1,6 @@
 import { Alert, AlertButton, AlertOptions } from 'react-native';
 import { ZodError } from 'zod';
+import { toProperCase } from './toProperCase';
 
 export const showErrorAlert = (
   error: Error,
@@ -16,10 +17,4 @@ export const showErrorAlert = (
   }
 
   Alert.alert(title, message, buttons, options);
-};
-
-const toProperCase = (str: string) => {
-  return str.replace(/\w\S*/g, function (txt) {
-    return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
-  });
 };

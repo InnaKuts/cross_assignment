@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     paddingVertical: ds.spacing.xs,
   },
   addCardButton: {
-    height: '100%',
+    flex: 1,
     padding: ds.spacing.xs,
     justifyContent: 'center',
     alignItems: 'center',

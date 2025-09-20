@@ -13,9 +13,10 @@ import {
   CardsRow,
   RowItem,
   Icons,
+  toProperCase,
 } from '~/components';
 import { Cloth, Outfit, Slot, SlotSchema } from '~/data/models';
-import { useState, useLayoutEffect, useMemo } from 'react';
+import { useState, useLayoutEffect, useMemo, useEffect } from 'react';
 import { SCREENS } from '~/navigation/screens';
 import { useThemeColors } from '~/contexts/ThemeContext';
 
@@ -66,6 +67,8 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
   const updateOutfitMutation = useUpdateOutfit();
   const deleteOutfitMutation = useDeleteOutfit();
   const navigation = useNavigation();
+  const route = useRoute<OutfitRouteProp>();
+  const { selectedCloth } = route.params;
   const [title, setTitle] = useState(outfit?.name || '');
 
   const [clothBySlots, setClothBySlots] = useState<Record<Slot, Cloth[]>>(() => {
@@ -77,6 +80,19 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
     }
     return grouped;
   });
+
+  useEffect(() => {
+    if (selectedCloth) {
+      setClothBySlots((prev) => {
+        const newSlots = { ...prev };
+        newSlots[selectedCloth.slot] = [
+          ...newSlots[selectedCloth.slot].filter((c) => c.id !== selectedCloth.id),
+          selectedCloth,
+        ];
+        return newSlots;
+      });
+    }
+  }, [selectedCloth]);
 
   const cardsBySlots = useMemo(() => {
     return Object.fromEntries(
@@ -102,11 +118,16 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
           .concat({
             id: 'addButton',
             icon: Icons.addOutline,
-            onButtonPress: () => {},
+            onButtonPress: () => {
+              navigation.navigate(SCREENS.SELECT_CLOTH, {
+                slot: slot,
+                returnToScreen: SCREENS.OUTFIT,
+              });
+            },
           } as RowItem),
       ])
     ) as Record<Slot, RowItem[]>;
-  }, [clothBySlots]);
+  }, [clothBySlots, navigation]);
 
   const isPending =
     createOutfitMutation.isPending ||
@@ -157,9 +178,11 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
         <Button
           title={isPending ? 'Saving...' : 'Save'}
           onPress={() => {
+            const allClothes = Object.values(clothBySlots).flat();
+
             if (outfit) {
               updateOutfitMutation.mutate(
-                { id: outfit.id, name: title, clothes: [] },
+                { id: outfit.id, name: title, clothes: allClothes },
                 {
                   onSuccess: () => {
                     navigation.goBack();
@@ -171,7 +194,7 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
               );
             } else {
               createOutfitMutation.mutate(
-                { name: title, clothes: [] },
+                { name: title, clothes: allClothes },
                 {
                   onSuccess: () => {
                     navigation.goBack();
@@ -192,9 +215,10 @@ function OutfitView({ outfit }: { outfit: Outfit | null }) {
 
 const SlotRow = ({ slot, cards }: { slot: Slot; cards: RowItem[] }) => {
   const colors = useThemeColors();
+  const slotText = useMemo(() => toProperCase(slot), [slot]);
   return (
     <View style={styles.slotRow}>
-      <Text style={[ds.font.action.md, { color: colors.secondary.darkest }]}>{slot}</Text>
+      <Text style={[ds.font.action.md, { color: colors.secondary.darkest }]}>{slotText}</Text>
       <CardsRow cards={cards} />
     </View>
   );
